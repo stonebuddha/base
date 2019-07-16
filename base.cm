@@ -4,8 +4,8 @@ Library
 is
 	$/basis.cm
 
-	list.sig
-	list.sml
+	lib/list.sig
+	lib/list.sml
 
-	base.sig
-	base.sml
+	lib/base.sig
+	lib/base.sml

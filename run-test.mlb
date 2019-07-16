@@ -1,6 +1,6 @@
 $(SML_LIB)/basis/basis.mlb
 
-lib/base.mlb
+base.mlb
 
 ann
 	"warnUnused true"
@@ -11,7 +11,6 @@ ann
 	"sequenceNonUnit error"
 in
 	test/sunit.sml
-
 	test/main.sig
 	test/main.sml
 

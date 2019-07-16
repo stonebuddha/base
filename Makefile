@@ -15,7 +15,7 @@ mlton: _build/$(TEST).opt
 
 .PHONY: clean
 clean:
-	rm -rf _build .cm src/.cm *.du *.ud
+	rm -rf _build .cm lib/.cm test/.cm *.du *.ud
 
 _build/$(TEST): _build/smlnj/$(TEST).$(SUFFIX) _build/smlnj/$(TEST)-wrapper.sh
 	mkdir -p $(@D)
@@ -23,7 +23,7 @@ _build/$(TEST): _build/smlnj/$(TEST).$(SUFFIX) _build/smlnj/$(TEST)-wrapper.sh
 	chmod +x $@
 
 ifeq ($(USE), smlnj)
-_build/smlnj/$(TEST).cm.mk: $(TEST).cm lib/$(LIB).cm
+_build/smlnj/$(TEST).cm.mk: $(TEST).cm $(LIB).cm
 	mkdir -p $(@D)
 	touch $@
 	ml-makedepend -n -f $@ $< _build/smlnj/$(TEST).$(SUFFIX) || rm -f $@
@@ -46,7 +46,7 @@ _build/$(TEST).opt: _build/mlton/$(TEST)
 	cp $< $@
 
 ifeq ($(USE), mlton)
-_build/mlton/$(TEST).mlb.mk: $(TEST).mlb lib/$(LIB).mlb
+_build/mlton/$(TEST).mlb.mk: $(TEST).mlb $(LIB).mlb
 	mkdir -p $(@D)
 	echo '_build/mlton/$(TEST): \\' >> $@
 	$(MLTON) -stop f $< | sed -e 's/$$/ \\/' >> $@ || rm -f $@

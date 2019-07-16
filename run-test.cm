@@ -1,9 +1,8 @@
 Group is
 	$/basis.cm
 
-	lib/base.cm
+	base.cm
 
 	test/sunit.sml
-
 	test/main.sig
 	test/main.sml
