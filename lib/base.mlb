@@ -1,0 +1,21 @@
+local
+	$(SML_LIB)/basis/basis.mlb
+in
+	ann
+		"warnUnused true"
+		"forceUsed"
+		"nonexhaustiveBind warn"
+		"nonexhaustiveMatch warn"
+		"redundantBind warn"
+		"redundantMatch warn"
+		"sequenceNonUnit warn"
+	in
+		local
+			base.sig
+			base.sml
+		in
+			signature BASE
+			structure Base
+		end
+	end
+end

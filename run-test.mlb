@@ -1,0 +1,19 @@
+$(SML_LIB)/basis/basis.mlb
+
+lib/base.mlb
+
+ann
+	"warnUnused true"
+	"nonexhaustiveBind error"
+	"nonexhaustiveMatch error"
+	"redundantBind error"
+	"redundantMatch error"
+	"sequenceNonUnit error"
+in
+	test/sunit.sml
+
+	test/main.sig
+	test/main.sml
+
+	test/call-main.sml
+end
