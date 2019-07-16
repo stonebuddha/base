@@ -11,6 +11,9 @@ in
 		"sequenceNonUnit warn"
 	in
 		local
+			list.sig
+			list.sml
+
 			base.sig
 			base.sml
 		in
