@@ -35,10 +35,10 @@ struct
 
 	val exists = List.exists
 
-	fun forall p [] = true
+	fun forall _ [] = true
 		| forall p (x :: xs) = (p x) andalso (forall p xs)
 
-	fun count p [] = 0
+	fun count _ [] = 0
 		| count p (x :: xs) =
 			let
 				val cx = if p x then 1 else 0
@@ -102,7 +102,8 @@ struct
 
 	fun nthExn l n = List.nth (l, n) handle Empty => raise Fail ("List.nthExn " ^ Int.toString n ^ " called on list of length " ^ Int.toString (length l))
 
-	fun rev (r as ([] | [_])) = r
+	fun rev (r as []) = r
+		| rev (r as [_]) = r
 		| rev (x :: y :: rest) = List.revAppend (rest, [y, x])
 
 	fun revAppend l1 l2 = List.revAppend (l1, l2)
