@@ -5,4 +5,6 @@ struct
 	fun subtraction (a, b) = a - b
 
 	structure List = BaseList
+	structure Monad = BaseMonad
+	structure Result = BaseResult
 end

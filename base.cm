@@ -6,6 +6,9 @@ is
 
 	lib/list.sig
 	lib/list.sml
+	lib/monad.sml
+	lib/result.sig
+	lib/result.sml
 
 	lib/base.sig
 	lib/base.sml
