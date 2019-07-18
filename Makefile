@@ -48,7 +48,7 @@ _build/$(TEST).opt: _build/mlton/$(TEST)
 ifeq ($(USE), mlton)
 _build/mlton/$(TEST).mlb.mk: $(TEST).mlb $(LIB).mlb
 	mkdir -p $(@D)
-	echo '_build/mlton/$(TEST): \\' >> $@
+	echo '_build/mlton/$(TEST): \\' > $@
 	$(MLTON) -stop f $< | sed -e 's/$$/ \\/' >> $@ || rm -f $@
 
 -include _build/mlton/$(TEST).mlb.mk

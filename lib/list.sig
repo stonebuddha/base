@@ -48,7 +48,7 @@ sig
 
 	val maxElt : ('a -> 'a -> int) -> 'a t -> 'a option
 
-	(** {2 Standard API} *)
+	(** {2 List-Specific API} *)
 
 	(** [OrUnequalLengths] is used for functions that take more than one lists and only make sense if all the lists have the same length. *)
 	structure OrUnequalLengths :

@@ -1,87 +1,82 @@
-local
-
-signature BASIC =
+signature BASE_MONAD_BASIC =
 sig
-	type 'a t
+	type 'a monad
 
-	val bind : ('a -> 'b t) -> 'a t -> 'b t
+	val bind : ('a -> 'b monad) -> 'a monad -> 'b monad
 
-	val return : 'a -> 'a t
+	val return : 'a -> 'a monad
 end
 
-funsig MAKE (X : BASIC) =
+signature BASE_MONAD_S =
 sig
-	val >>= : ('a X.t * ('a -> 'b X.t)) -> 'b X.t
+	type 'a monad
 
-	val >>| : ('a X.t * ('a -> 'b)) -> 'b X.t
-
-	val bind : ('a -> 'b X.t) -> 'a X.t -> 'b X.t
-
-	val return : 'a -> 'a X.t
-
-	val map : ('a -> 'b) -> 'a X.t -> 'b X.t
-
-	val join : 'a X.t X.t -> 'a X.t
-
-	val ignoreM : 'a X.t -> unit X.t
-
-	val all : 'a X.t list -> 'a list X.t
-
-	val allUnit : unit X.t list -> unit X.t
+	val >>= : ('a monad * ('a -> 'b monad)) -> 'b monad
+	val >>| : ('a monad * ('a -> 'b)) -> 'b monad
+	val bind : ('a -> 'b monad) -> 'a monad -> 'b monad
+	val return : 'a -> 'a monad
+	val map : ('a -> 'b) -> 'a monad -> 'b monad
+	val join : 'a monad monad -> 'a monad
+	val ignoreM : 'a monad -> unit monad
+	val all : 'a monad list ->'a list monad
+	val allUnit : unit monad list -> unit monad
 end
 
-signature BASIC2 =
+signature BASE_MONAD_BASIC2 =
 sig
-	type ('a, 'e) t
+	type ('a, 'e) monad
 
-	val bind: ('a -> ('b, 'e) t) -> ('a, 'e) t -> ('b, 'e) t
+	val bind: ('a -> ('b, 'e) monad) -> ('a, 'e) monad -> ('b, 'e) monad
 
-	val return : 'a -> ('a, 'e) t
+	val return : 'a -> ('a, 'e) monad
 end
 
-funsig MAKE2 (X : BASIC2) =
+signature BASE_MONAD_S2 =
 sig
-	val >>= : (('a, 'e) X.t * ('a -> ('b, 'e) X.t)) -> ('b, 'e) X.t
+	include BASE_MONAD_BASIC2
 
-	val >>| : (('a, 'e) X.t * ('a -> 'b)) -> ('b, 'e) X.t
-
-	val bind : ('a -> ('b, 'e) X.t) -> ('a, 'e) X.t -> ('b, 'e) X.t
-
-	val return : 'a -> ('a, 'e) X.t
-
-	val map : ('a -> 'b) -> ('a, 'e) X.t -> ('b, 'e) X.t
-
-	val join : (('a, 'e) X.t, 'e) X.t -> ('a, 'e) X.t
-
-	val ignoreM : ('a, 'e) X.t -> (unit, 'e) X.t
-
-	val all : ('a, 'e) X.t list -> ('a list, 'e) X.t
-
-	val allUnit : (unit, 'e) X.t list -> (unit, 'e) X.t
+	val >>= : (('a, 'e) monad * ('a -> ('b, 'e) monad)) -> ('b, 'e) monad
+	val >>| : (('a, 'e) monad * ('a -> 'b)) -> ('b, 'e) monad
+	val map : ('a -> 'b) -> ('a, 'e) monad -> ('b, 'e) monad
+	val join : (('a, 'e) monad, 'e) monad -> ('a, 'e) monad
+	val ignoreM : ('a, 'e) monad -> (unit, 'e) monad
+	val all : ('a, 'e) monad list -> ('a list, 'e) monad
+	val allUnit : (unit, 'e) monad list -> (unit, 'e) monad
 end
 
-signature BASIC_GENERAL =
+signature BASE_MONAD_BASIC_GENERAL =
 sig
-	type ('a, 'd, 'e) t
+	type ('a, 'd, 'e) monad
 
-	val bind : ('a -> ('b, 'd, 'e) t) -> ('a, 'd, 'e) t -> ('b, 'd, 'e) t
+	val bind : ('a -> ('b, 'd, 'e) monad) -> ('a, 'd, 'e) monad -> ('b, 'd, 'e) monad
 
-	val return: 'a -> ('a, 'd, 'e) t
+	val return: 'a -> ('a, 'd, 'e) monad
 end
 
-functor MakeGeneral (M : BASIC_GENERAL) =
+signature BASE_MONAD_S_GENERAL =
+sig
+	include BASE_MONAD_BASIC_GENERAL
+
+	val >>= : (('a, 'd, 'e) monad * ('a -> ('b, 'd, 'e) monad)) -> ('b, 'd, 'e) monad
+	val >>| : (('a, 'd, 'e) monad * ('a -> 'b)) -> ('b, 'd, 'e) monad
+	val map : ('a -> 'b) -> ('a, 'd, 'e) monad -> ('b, 'd, 'e) monad
+	val join : (('a, 'd, 'e) monad, 'd, 'e) monad -> ('a, 'd, 'e) monad
+	val ignoreM : ('a, 'd, 'e) monad -> (unit, 'd, 'e) monad
+	val all : ('a, 'd, 'e) monad list -> ('a list, 'd, 'e) monad
+	val allUnit : (unit, 'd, 'e) monad list -> (unit, 'd, 'e) monad
+end
+
+functor BaseMonad_MakeGeneral (X : BASE_MONAD_BASIC_GENERAL) : BASE_MONAD_S_GENERAL where type ('a, 'd, 'e) monad = ('a, 'd, 'e) X.monad =
 struct
-	val bind = M.bind
+	open X
 
-	val return = M.return
-
-	fun map f ma = M.bind (fn a => M.return (f a)) ma
+	fun map f m = bind (fn a => return (f a)) m
 
 	fun op>>= (t, f) = bind f t
 
 	fun op>>| (t, f) = map f t
 
-	infix 0 >>= >>|
+	infix 1 >>= >>|
 
 	fun join t = t >>= (fn t' => t')
 
@@ -99,32 +94,30 @@ struct
 		| allUnit (t :: ts) = t >>= (fn () => allUnit ts)
 end
 
-in
-
-signature BASE_MONAD =
-sig
-	functor Make : MAKE
-
-	functor Make2 : MAKE2
-end
-
-structure BaseMonad : BASE_MONAD =
-struct
-	functor Make (M : BASIC) =
-		MakeGeneral(
+functor BaseMonad_Make (X : BASE_MONAD_BASIC) : BASE_MONAD_S where type 'a monad = 'a X.monad =
+	let
+		structure G = BaseMonad_MakeGeneral(
 			struct
-				type ('a, 'd, 'e) t = 'a M.t
-				val bind = M.bind
-				val return = M.return
+				open X
+				type ('a, 'd, 'e) monad = 'a X.monad
 			end)
+	in
+		struct
+			open G
+			type 'a monad = 'a X.monad
+		end
+	end
 
-	functor Make2 (M : BASIC2) =
-		MakeGeneral(
+functor BaseMonad_Make2 (X : BASE_MONAD_BASIC2) : BASE_MONAD_S2 where type ('a, 'e) monad = ('a, 'e) X.monad =
+	let
+		structure G = BaseMonad_MakeGeneral(
 			struct
-				type ('a, 'd, 'e) t = ('a, 'd) M.t
-				val bind = M.bind
-				val return = M.return
+				open X
+				type ('a, 'd, 'e) monad = ('a, 'd) X.monad
 			end)
-end
-
-end
+	in
+		struct
+			open G
+			type ('a, 'e) monad = ('a, 'e) X.monad
+		end
+	end

@@ -2,6 +2,7 @@ local
 	$(SML_LIB)/basis/basis.mlb
 in
 	ann
+		"allowOrPats true"
 		"warnUnused true"
 		"forceUsed"
 		"nonexhaustiveBind warn"
@@ -13,6 +14,9 @@ in
 		local
 			lib/list.sig
 			lib/list.sml
+			lib/monad.sml
+			lib/result.sig
+			lib/result.sml
 
 			lib/base.sig
 			lib/base.sml
