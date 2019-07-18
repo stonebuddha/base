@@ -2,7 +2,7 @@ signature BASE_RESULT =
 sig
 	datatype ('ok, 'err) t = OK of 'ok | ERROR of 'err
 
-	val compare : ('ok -> 'ok -> int) -> ('err -> 'err -> int) -> ('ok, 'err) t -> ('ok, 'err) t -> int
+	val compare : ('ok * 'ok -> int) -> ('err * 'err -> int) -> ('ok, 'err) t -> ('ok, 'err) t -> int
 
 	(** {2 Monad API} *)
 
@@ -24,6 +24,8 @@ sig
 	val mapOK : ('ok -> 'c) -> ('ok, 'err) t -> ('c, 'err) t
 	val mapERROR : ('err -> 'c) -> ('ok, 'err) t -> ('ok, 'c) t
 
-	val combine : ('ok1 -> 'ok2 -> 'ok3) -> ('err -> 'err -> 'err) -> ('ok1, 'err) t -> ('ok2, 'err) t -> ('ok3, 'err) t
+	val combine : ('ok1 * 'ok2 -> 'ok3) -> ('err * 'err -> 'err) -> ('ok1, 'err) t -> ('ok2, 'err) t -> ('ok3, 'err) t
 	(** Returns [OK] if both are [OK]. *)
+
+	val tryWith : (unit -> 'a) -> ('a, exn) t
 end

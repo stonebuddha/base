@@ -1,5 +1,6 @@
 local
 	$(SML_LIB)/basis/basis.mlb
+	$(SML_LIB)/basis/mlton.mlb
 in
 	ann
 		"allowOrPats true"
@@ -12,11 +13,15 @@ in
 		"sequenceNonUnit warn"
 	in
 		local
-			lib/list.sig
-			lib/list.sml
-			lib/monad.sml
+			lib/cont-mlton.sml
+			lib/utils.sml
+
+			lib/monad.fun
 			lib/result.sig
 			lib/result.sml
+			lib/container.fun
+			lib/list.sig
+			lib/list.sml
 
 			lib/base.sig
 			lib/base.sml

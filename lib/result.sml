@@ -4,10 +4,10 @@ struct
 
 	fun compare cmpOk cmpErr a b =
 		case (a, b) of
-			(OK a, OK b) => cmpOk a b
+			(OK a, OK b) => cmpOk (a, b)
 		| (OK _, _) => ~1
 		| (_, OK _) => 1
-		| (ERROR a, ERROR b) => cmpErr a b
+		| (ERROR a, ERROR b) => cmpErr (a, b)
 
 	structure Monad = BaseMonad_Make2(
 		struct
@@ -58,6 +58,9 @@ struct
 	fun combine cmbOk cmbErr t1 t2 =
 		case (t1, t2) of
 			((OK _, ERROR e) | (ERROR e, OK _)) => ERROR e
-		| (OK x1, OK x2) => OK (cmbOk x1 x2)
-		| (ERROR e1, ERROR e2) => ERROR (cmbErr e1 e2)
+		| (OK x1, OK x2) => OK (cmbOk (x1, x2))
+		| (ERROR e1, ERROR e2) => ERROR (cmbErr (e1, e2))
+
+	fun tryWith f =
+		OK (f ()) handle exn => ERROR exn
 end

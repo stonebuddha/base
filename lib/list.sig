@@ -2,51 +2,15 @@ signature BASE_LIST =
 sig
 	type 'a t = 'a list
 
-	val compare : ('a -> 'a -> int) -> 'a t -> 'a t -> int
+	val compare : ('a * 'a -> int) -> 'a t -> 'a t -> int
 
 	(** {2 Container API} *)
 
-	val mem : ('a -> 'a -> bool) -> 'a t -> 'a -> bool
-	(** Checks whether the provided element is in the container. *)
+	include BASE_CONTAINER_S1 where type 'a container = 'a t
 
-	val length : 'a t -> int
+	(** {2 Monad API} *)
 
-	val isEmpty : 'a t -> bool
-
-	val iter : ('a -> unit) -> 'a t -> unit
-
-	val fold : 'accum -> ('accum -> 'a -> 'accum) -> 'a t -> 'accum
-	(** [fold init f t] returns [f (... f (f (f (init, e1), e2), e3) ..., en)], where [e1 ... en] are the elements of t. *)
-
-	(** [foldResult init f t] is a short-circuiting version of [fold] that runs in the [Result] monad. *)
-
-	(** [foldUntil init f finish t] is a short-circuiting version of [fold]. *)
-
-	val exists : ('a -> bool) -> 'a t -> bool
-	(** Returns [true] iff there exists an element that satisfies the predicate. *)
-
-	val forall : ('a -> bool) -> 'a t -> bool
-	(** Returns [true] iff all elements satisfy the predicate. *)
-
-	val count : ('a -> bool) -> 'a t -> int
-	(** Returns the number of elements that satisfy the predicate. *)
-
-	(** Returns the sum of the transformed elements. *)
-
-	val find : ('a -> bool) -> 'a t -> 'a option
-	(** Returns as an option the first element that satisfies the predicate. *)
-
-	val findMap : ('a -> 'b option) -> 'a t -> 'b option
-	(** Returns the first evaluation of the predicate that returns SOME. *)
-
-	val toList : 'a t -> 'a list
-
-	val toArray: 'a t -> 'a array
-
-	val minElt : ('a -> 'a -> int) -> 'a t -> 'a option
-	(** Returns a minimum (maximum, resp.) element or [NONE] if the collection is empty. *)
-
-	val maxElt : ('a -> 'a -> int) -> 'a t -> 'a option
+	include BASE_MONAD_S where type 'a monad = 'a t
 
 	(** {2 List-Specific API} *)
 
@@ -55,10 +19,11 @@ sig
 	sig
 		datatype 'a t = OK of 'a | UNEQUAL_LENGTHS
 
-		val compare : ('a -> 'a -> int) -> 'a t -> 'a t -> int
+		val compare : ('a * 'a -> int) -> 'a t -> 'a t -> int
 	end
 
 	val ofList : 'a t -> 'a t
+	(** [ofList] is the identity function. *)
 
 	val nth : 'a t -> int -> 'a option
 
@@ -74,10 +39,56 @@ sig
 	val unorderedAppend : 'a t -> 'a t -> 'a t
 	(** [unorderedAppend l1 l2] has the same elements as [l1 @ l2], but in some unspecified order. *)
 
+	val revMap : ('a -> 'b) -> 'a t -> 'b t
 	(** [revMap f l] gives the same result as [List.rev (List.map f l)]. *)
 
-	val hd : 'a t -> 'a option
+	(** [iter2Exn] *)
 
+	(** [iter2] *)
+
+	(** [revMap2Exn] *)
+
+	(** [revMap2] *)
+
+	(** [fold2Exn] *)
+
+	(** [fold2] *)
+
+	(** [foralli] *)
+
+	(** [forall2Exn] *)
+
+	(** [forall2] *)
+
+	(** [existsi] *)
+
+	(** [exists2Exn] *)
+
+	(** [exists2] *)
+
+	(** [filter] *)
+
+	(** [revFilter] *)
+
+	(** [filteri] *)
+
+	(** [partitionMap] *)
+
+	(** [partition3Map] *)
+
+	(** [partitionTF] *)
+
+	(** [partitionResult] *)
+
+	(** [splitN] *)
+
+	(** [sort] *)
+
+	(** [stableSort] *)
+
+	(** [merge] *)
+
+	val hd : 'a t -> 'a option
 	val tl : 'a t -> 'a t option
 
 	val hdExn : 'a t -> 'a
@@ -85,4 +96,161 @@ sig
 
 	val tlExn : 'a t -> 'a t
 	(** Returns the list without its first element, or raises if the list is empty. *)
+
+	(** [findi] *)
+
+	(** [findExn] *)
+
+	(** [findMapExn] *)
+
+	(** [findMapi] *)
+
+	(** [findMapiExn] *)
+
+	val append : 'a t -> 'a t -> 'a t
+	(** E.g., [append [1, 2] [3, 4, 5]] is [[1, 2, 3, 4, 5]]. *)
+
+	(** [foldingMap] *)
+
+	(** [foldingMapi] *)
+
+	(** [foldMap] *)
+
+	(** [foldMapi] *)
+
+	val concatMap : ('a -> 'b t) -> 'a t -> 'b t
+	(** [concatMap f t] is [concat (map f t)], except that there is no guarantee about the order in which [f] is applied to the elements of [t]. *)
+
+	(** [concatMapi] *)
+
+	(** [map2Exn] *)
+
+	(** [map2] *)
+
+	(** [revMap3Exn] *)
+
+	(** [revMap3] *)
+
+	(** [map3Exn] *)
+
+	(** [map3] *)
+
+	(** [revMapAppend] *)
+
+	(** [foldRight] *)
+
+	(** [foldLeft] *)
+
+	(** [unzip] *)
+
+	(** [unzip3] *)
+
+	(** [zip] *)
+
+	(** [zipExn] *)
+
+	(** [mapi] *)
+
+	(** [revMapi] *)
+
+	(** [iteri] *)
+
+	(** [foldi] *)
+
+	(** [reduceExn] *)
+
+	(** [reduce] *)
+
+	(** [reduceBalanced] *)
+
+	(** [reduceBalancedExn] *)
+
+	(** [group] *)
+
+	(** [groupi] *)
+
+	(** [chunksOf] *)
+
+	(** [last] *)
+
+	(** [lastExn] *)
+
+	(** [isPrefix] *)
+
+	(** [findConsecutiveDuplicates] *)
+
+	(** [removeConsecutiveDuplicates] *)
+
+	(** [dedupAndSort] *)
+
+	(** [findADup] *)
+
+	(** [containsDup] *)
+
+	(** [findAllDups] *)
+
+	(** [counti] *)
+
+	(** [range] *)
+
+	(** [range'] *)
+
+	(** [init] *)
+
+	(** [revFilterMap] *)
+
+	(** [revFilterMapi] *)
+
+	(** [filterMap] *)
+
+	(** [filterMapi] *)
+
+	(** [filterOpt] *)
+
+	(** [sub] *)
+
+	(** [take] *)
+
+	(** [drop] *)
+
+	(** [takeWhile] *)
+
+	(** [dropWhile] *)
+
+	(** [splitWhile] *)
+
+	(** [dropLast] *)
+
+	(** [dropLastExn] *)
+
+	(** [concat] *)
+
+	(** [concatNoOrder] *)
+
+	(** [cons] *)
+
+	(** [cartesianProduct] *)
+
+	(** [permute] *)
+
+	(** [randomElement] *)
+
+	(** [randomElementExn] *)
+
+	(** [isSorted] *)
+
+	(** [isSortedStrictly] *)
+
+	(** [equal] *)
+
+	structure Infix :
+	sig
+		val @ : 'a t * 'a t -> 'a t
+	end
+
+	(** [transpose] *)
+
+	(** [transposeExn] *)
+
+	(** [intersperse] *)
 end

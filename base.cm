@@ -4,11 +4,15 @@ Library
 is
 	$/basis.cm
 
-	lib/list.sig
-	lib/list.sml
-	lib/monad.sml
+	lib/cont-smlnj.sml
+	lib/utils.sml
+
+	lib/monad.fun
 	lib/result.sig
 	lib/result.sml
+	lib/container.fun
+	lib/list.sig
+	lib/list.sml
 
 	lib/base.sig
 	lib/base.sml
