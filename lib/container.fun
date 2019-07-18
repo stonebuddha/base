@@ -16,10 +16,10 @@ sig
 
 	val iter : (container_elt -> unit) -> container -> unit
 
-	val fold : 'accum -> ('accum -> container_elt -> 'accum) -> container -> 'accum
+	val fold : 'accum -> ('accum * container_elt -> 'accum) -> container -> 'accum
 	(** [fold init f t] returns [f (... f (f (f (init, e1), e2), e3) ..., en)], where [e1 ... en] are the elements of t. *)
 
-	val foldResult : 'accum -> ('accum -> container_elt -> ('accum, 'e) BaseResult.t) -> ('accum, 'e) BaseResult.t
+	val foldResult : 'accum -> ('accum * container_elt -> ('accum, 'e) BaseResult.t) -> ('accum, 'e) BaseResult.t
 	(** [foldResult init f t] is a short-circuiting version of [fold] that runs in the [Result] monad. *)
 
 	val foldUntil : 'accum -> ('accum * container_elt -> ('accum, 'final) BaseContinueOrStop.t) -> ('accum -> 'final) -> container -> 'final
@@ -46,10 +46,10 @@ sig
 	val toList : container -> container_elt list
 	val toArray : container -> container_elt array
 
-	val minElt : (container_elt -> container_elt -> int) -> container -> container_elt option
+	val minElt : (container_elt * container_elt -> int) -> container -> container_elt option
 	(** Returns a minimum (maximum, resp.) element or [NONE] if the collection is empty. *)
 
-	val maxElt : (container_elt -> container_elt -> int) -> container -> container_elt option
+	val maxElt : (container_elt * container_elt -> int) -> container -> container_elt option
 end
 
 signature BASE_CONTAINER_S1 =
