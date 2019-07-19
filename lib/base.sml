@@ -4,6 +4,9 @@ struct
 
 	fun subtraction (a, b) = a - b
 
+	open BaseUtils
+
+	structure Container = BaseContainer
 	structure List = BaseList
 	structure Result = BaseResult
 end

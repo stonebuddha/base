@@ -3,6 +3,7 @@ Library
 	structure Base
 is
 	$/basis.cm
+	$/smlnj-lib.cm
 
 	lib/cont-smlnj.sml
 	lib/utils.sml
