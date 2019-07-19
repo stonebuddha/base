@@ -1,4 +1,4 @@
-signature BASE_MONAD_BASIC =
+signature BASE_MONAD_BASIC1 =
 sig
 	type 'a monad
 
@@ -7,7 +7,7 @@ sig
 	val return : 'a -> 'a monad
 end
 
-signature BASE_MONAD_S =
+signature BASE_MONAD_S1 =
 sig
 	type 'a monad
 
@@ -94,7 +94,7 @@ struct
 		| allUnit (t :: ts) = t >>= (fn () => allUnit ts)
 end
 
-functor BaseMonad_Make (X : BASE_MONAD_BASIC) : BASE_MONAD_S where type 'a monad = 'a X.monad =
+functor BaseMonad_Make1 (X : BASE_MONAD_BASIC1) : BASE_MONAD_S1 where type 'a monad = 'a X.monad =
 	let
 		structure G = BaseMonad_MakeGeneral(
 			struct

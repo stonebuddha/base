@@ -429,7 +429,7 @@ struct
 			map2Ok f l1 l2
 		end
 
-	structure Monad = BaseMonad_Make(
+	structure Monad = BaseMonad_Make1(
 		struct
 			type 'a monad = 'a t
 

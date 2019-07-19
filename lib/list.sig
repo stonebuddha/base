@@ -10,7 +10,7 @@ sig
 
 	(** {2 Monad API} *)
 
-	include BASE_MONAD_S where type 'a monad = 'a t
+	include BASE_MONAD_S1 where type 'a monad = 'a t
 
 	(** {2 List-Specific API} *)
 
