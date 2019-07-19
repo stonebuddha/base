@@ -46,8 +46,7 @@ struct
 
 	val exists = List.exists
 
-	fun forall _ [] = true
-		| forall p (x :: xs) = (p x) andalso (forall p xs)
+	val forall = List.all
 
 	val find = List.find
 
@@ -94,9 +93,9 @@ struct
 
 	fun ofList l = l
 
-	fun nth l n = SOME $ List.nth (l, n) handle Empty => NONE
+	fun nth l n = SOME $ List.nth (l, n) handle Subscript => NONE
 
-	fun nthExn l n = List.nth (l, n) handle Empty => raise InvalidArg ("nthExn " ^ Int.toString n ^ " called on list of length " ^ Int.toString (length l))
+	fun nthExn l n = List.nth (l, n) handle Subscript => raise InvalidArg ("BaseList.nthExn " ^ Int.toString n ^ " called on list of length " ^ Int.toString (length l))
 
 	fun rev (r as ([] | [_])) = r
 		| rev (x :: y :: rest) = List.revAppend (rest, [y, x])
@@ -124,7 +123,7 @@ struct
 			val n2 = length l2
 		in
 			if n1 <> n2 then
-				raise (InvalidArg $ "length mismatch in " ^ name ^ ": " ^ Int.toString n1 ^ " <> " ^ Int.toString n2)
+				raise (InvalidArg $ "length mismatch in BaseList." ^ name ^ ": " ^ Int.toString n1 ^ " <> " ^ Int.toString n2)
 			else
 				()
 		end
@@ -334,9 +333,9 @@ struct
 	fun tl [] = NONE
 		| tl (_ :: xs) = SOME xs
 
-	val hdExn = List.hd
+	fun hdExn l = List.hd l handle Empty => raise (InvalidArg "BaseList.hdExn")
 
-	val tlExn = List.tl
+	fun tlExn l = List.tl l handle Empty => raise (InvalidArg "BaseList.tlExn")
 
 	fun findi f t =
 		let
@@ -346,12 +345,12 @@ struct
 			aux 0 t
 		end
 
-	fun findExn _ [] = raise (NotFound "findExn: not found")
+	fun findExn _ [] = raise (NotFound "BaseList.findExn: not found")
 		| findExn f (x :: xs) = if f x then x else findExn f xs
 
 	fun findMapExn f t =
 		case findMap f t of
-			NONE => raise (NotFound "findMapExn: not found")
+			NONE => raise (NotFound "BaseList.findMapExn: not found")
 		| SOME x => x
 
 	fun findMapi f t =
@@ -367,7 +366,7 @@ struct
 
 	fun findMapiExn f t =
 		case findMapi f t of
-			NONE => raise (NotFound "findMapiExn: not found")
+			NONE => raise (NotFound "BaseList.findMapiExn: not found")
 		| SOME res => res
 
 	fun slowAppend l1 l2 = revAppend (rev l1) l2
@@ -480,7 +479,7 @@ struct
 
 	fun lastExn [x] = x
 		| lastExn (_ :: tl) = lastExn tl
-		| lastExn [] = raise (InvalidArg "lastExn")
+		| lastExn [] = raise (InvalidArg "BaseList.lastExn")
 
 	fun last [x] = SOME x
 		| last (_ :: tl) = last tl
@@ -499,7 +498,7 @@ struct
 	fun counti f t =
 		foldi 0 (fn (idx, cnt, a) => if f (idx, a) then cnt + 1 else cnt) t
 
-	fun init f n = List.tabulate (n, f)
+	fun init f n = List.tabulate (n, f) handle Size => raise (InvalidArg $ "BaseList.init " ^ Int.toString n)
 
 	fun revFilterMap f l =
 		let
@@ -529,7 +528,7 @@ struct
 
 	fun filterOpt l = filterMap (fn x => x) l
 
-	fun concat l = foldRight [] op@ l
+	fun concat l = foldRight [] (fn (t, acc) => append t acc) l
 
 	fun concatNoOrder l = fold [] (fn (acc, l) => revAppend l acc) l
 
