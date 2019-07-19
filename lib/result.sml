@@ -3,11 +3,13 @@ struct
 	datatype ('ok, 'err) t = OK of 'ok | ERROR of 'err
 
 	fun compare cmpOk cmpErr a b =
-		case (a, b) of
-			(OK a, OK b) => cmpOk (a, b)
-		| (OK _, _) => ~1
-		| (_, OK _) => 1
-		| (ERROR a, ERROR b) => cmpErr (a, b)
+		if Cont.phyEq (a, b) then 0
+		else
+			case (a, b) of
+				(OK a, OK b) => cmpOk (a, b)
+			| (OK _, _) => ~1
+			| (_, OK _) => 1
+			| (ERROR a, ERROR b) => cmpErr (a, b)
 
 	structure Monad = BaseMonad_Make2(
 		struct

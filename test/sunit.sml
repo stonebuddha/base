@@ -13,8 +13,8 @@ struct
 	| TEST_LIST of test list
 	| TEST_LABEL of string * test
 
-	fun assertEqual cmp printerOpt (expected, actual) =
-		if cmp (expected, actual) then
+	fun assertEqual equal printerOpt (expected, actual) =
+		if equal (expected, actual) then
 			()
 		else
 			let

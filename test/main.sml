@@ -14,7 +14,11 @@ struct
 
 	fun main (_, _) =
 		let
-			val suite = "BaseTest" >::: ["Addition" >:: testAddition, "Subtraction" >:: testSubtraction]
+			val suite = "BaseTest" >:::
+				[
+					"Addition" >:: testAddition,
+					"Subtraction" >:: testSubtraction
+				]
 			val () = runTestMain suite
 		in
 			OS.Process.success

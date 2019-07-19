@@ -83,11 +83,13 @@ struct
 		datatype 'a t = OK of 'a | UNEQUAL_LENGTHS
 
 		fun compare cmp a b =
-			case (a, b) of
-				(OK a, OK b) => cmp (a, b)
-			| (OK _, _) => ~1
-			| (_, OK _) => 1
-			| (UNEQUAL_LENGTHS, UNEQUAL_LENGTHS) => 0
+			if Cont.phyEq (a, b) then 0
+			else
+				case (a, b) of
+					(OK a, OK b) => cmp (a, b)
+				| (OK _, _) => ~1
+				| (_, OK _) => 1
+				| (UNEQUAL_LENGTHS, UNEQUAL_LENGTHS) => 0
 	end
 
 	fun ofList l = l

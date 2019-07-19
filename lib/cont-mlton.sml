@@ -5,4 +5,6 @@ struct
 	fun callcc f = M.callcc f
 
 	fun throw k v = M.throw (k, v)
+
+	val phyEq = MLton.eq
 end
