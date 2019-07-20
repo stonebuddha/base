@@ -4,6 +4,10 @@ sig
 
 	val compare : ('a * 'a -> int) -> 'a t -> 'a t -> int
 
+	(** {2 SExpable API} *)
+
+	include BASE_SEXPABLE_S1 where type 'a sexpable = 'a t
+
 	(** {2 Container API} *)
 
 	include BASE_CONTAINER_S1 where type 'a container = 'a t
@@ -20,6 +24,7 @@ sig
 		datatype 'a t = OK of 'a | UNEQUAL_LENGTHS
 
 		val compare : ('a * 'a -> int) -> 'a t -> 'a t -> int
+		val toSExp : ('a -> SExp.value) -> 'a t -> SExp.value
 	end
 
 	val ofList : 'a t -> 'a t

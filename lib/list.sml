@@ -89,6 +89,9 @@ struct
 				| (OK _, _) => ~1
 				| (_, OK _) => 1
 				| (UNEQUAL_LENGTHS, UNEQUAL_LENGTHS) => 0
+
+		fun toSExp forOk (OK x) = SExp.LIST [SExp.SYMBOL (Atom.atom "OK"), forOk x]
+			| toSExp _ UNEQUAL_LENGTHS = SExp.SYMBOL (Atom.atom "UNEQUAL_LENGTHS")
 	end
 
 	fun ofList l = l
@@ -544,4 +547,13 @@ struct
 	struct
 		fun op@ (l1, l2) = append l1 l2
 	end
+
+	type 'a sexpable = 'a t
+
+	fun fromSExp forElt sexp =
+		case sexp of
+			SExp.LIST sexps => map forElt sexps
+		| _ => raise (InvalidArg "BaseList.fromSExp")
+
+	fun toSExp forElt l = SExp.LIST $ map forElt l
 end

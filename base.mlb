@@ -1,6 +1,7 @@
 local
 	$(SML_LIB)/basis/basis.mlb
 	$(SML_LIB)/smlnj-lib/Util/smlnj-lib.mlb
+	$(SML_LIB)/smlnj-lib/SExp/sexp-lib.mlb
 
 	$(SML_LIB)/basis/mlton.mlb
 in
@@ -19,8 +20,11 @@ in
 			lib/utils.sml
 
 			lib/monad.fun
+			lib/sexpable.fun
 			lib/result.sig
 			lib/result.sml
+			lib/int.sig
+			lib/int.sml
 			lib/container.fun
 			lib/list.sig
 			lib/list.sml

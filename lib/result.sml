@@ -2,6 +2,9 @@ structure BaseResult : BASE_RESULT =
 struct
 	datatype ('ok, 'err) t = OK of 'ok | ERROR of 'err
 
+	open BaseUtils
+	infixr 0 $
+
 	fun compare cmpOk cmpErr a b =
 		if Cont.phyEq (a, b) then 0
 		else
@@ -10,6 +13,31 @@ struct
 			| (OK _, _) => ~1
 			| (_, OK _) => 1
 			| (ERROR a, ERROR b) => cmpErr (a, b)
+
+	type ('ok, 'err) sexpable = ('ok, 'err) t
+
+	fun fromSExp forOk forErr sexp =
+		case sexp of
+			SExp.LIST [SExp.SYMBOL tag, sexp'] =>
+			if Atom.toString tag = "OK" then OK (forOk sexp')
+			else if Atom.toString tag = "ERROR" then ERROR (forErr sexp')
+			else raise (InvalidArg "BaseResult.fromSExp")
+		| _ => raise (InvalidArg "BaseResult.fromSExp")
+
+	fun toSExp forOk forErr t =
+		case t of
+			OK x =>
+			let
+				val sexpOfX = forOk x
+			in
+				SExp.LIST [SExp.SYMBOL (Atom.atom "OK"), sexpOfX]
+			end
+		| ERROR e =>
+			let
+				val sexpOfE = forErr e
+			in
+				SExp.LIST [SExp.SYMBOL (Atom.atom "ERROR"), sexpOfE]
+			end
 
 	structure Monad = BaseMonad_Make2(
 		struct

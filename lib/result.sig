@@ -4,6 +4,10 @@ sig
 
 	val compare : ('ok * 'ok -> int) -> ('err * 'err -> int) -> ('ok, 'err) t -> ('ok, 'err) t -> int
 
+	(** {2 SExpable API} *)
+
+	include BASE_SEXPABLE_S2 where type ('ok, 'err) sexpable = ('ok, 'err) t
+
 	(** {2 Monad API} *)
 
 	include BASE_MONAD_S2 where type ('a, 'e) monad = ('a, 'e) t
