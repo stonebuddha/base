@@ -1,9 +1,20 @@
 Library
+	signature BCONTAINER
 	structure BContainer
+
+	signature BEITHER
 	structure BEither
+
+	signature BEXN
 	structure BExn
+
+	signature BINT
 	structure BInt
+
+	signature BLIST
 	structure BList
+
+	signature BRESULT
 	structure BResult
 is
 	$/basis.cm
