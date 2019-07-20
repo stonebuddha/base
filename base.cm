@@ -1,4 +1,7 @@
 Library
+	signature BAVL
+	structure BAvl
+
 	signature BCONTAINER
 	structure BContainer
 
@@ -24,6 +27,8 @@ is
 	lib/cont-smlnj.sml
 	lib/utils.sml
 
+	lib/avl.sig
+	lib/avl.sml
 	lib/exn.sig
 	lib/exn.sml
 	lib/monad.fun

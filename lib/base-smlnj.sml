@@ -1,3 +1,6 @@
+signature BAVL = BASE_AVL
+structure BAvl = BaseAvl
+
 signature BCONTAINER = BASE_CONTAINER
 structure BContainer = BaseContainer
 
