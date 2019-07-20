@@ -37,8 +37,20 @@ struct
 				assertEqualForSExp (printer (BResult.OK ~2), test [1, ~2, ~3])
 			end
 
+		fun testRevAppend () =
+			let
+				fun printer res = BList.toSExp BInt.toSExp res
+			in
+				assertEqualForSExp (printer [3, 2, 1, 4, 5, 6], printer (BList.revAppend [1, 2, 3] [4, 5, 6]));
+				assertEqualForSExp (printer [4, 5, 6], printer (BList.revAppend [] [4, 5, 6]));
+				assertEqualForSExp (printer [3, 2, 1], printer (BList.revAppend [1, 2, 3] []));
+				assertEqualForSExp (printer [1, 2, 3], printer (BList.revAppend [1] [2, 3]));
+				assertEqualForSExp (printer [2, 1, 3], printer (BList.revAppend [1, 2] [3]))
+			end
+
 		val suite = "List" >::: [
-			"findExn" >:: testFindExn
+			"findExn" >:: testFindExn,
+			"revAppend" >:: testRevAppend
 		]
 	end
 
