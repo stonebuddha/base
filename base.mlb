@@ -25,6 +25,8 @@ in
 			lib/exn.sml
 			lib/monad.fun
 			lib/sexpable.fun
+			lib/option.sig
+			lib/option.sml
 			lib/either.sig
 			lib/either.sml
 			lib/result.sig
@@ -52,6 +54,9 @@ in
 
 			signature BLIST = BASE_LIST
 			structure BList = BaseList
+
+			signature BOPTION = BASE_OPTION
+			structure BOption = BaseOption
 
 			signature BRESULT = BASE_RESULT
 			structure BResult = BaseResult
