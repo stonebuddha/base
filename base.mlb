@@ -23,6 +23,8 @@ in
 			lib/exn.sml
 			lib/monad.fun
 			lib/sexpable.fun
+			lib/either.sig
+			lib/either.sml
 			lib/result.sig
 			lib/result.sml
 			lib/int.sig
@@ -32,6 +34,7 @@ in
 			lib/list.sml
 		in
 			structure BContainer = BaseContainer
+			structure BEither = BaseEither
 			structure BExn = BaseExn
 			structure BInt = BaseInt
 			structure BList = BaseList

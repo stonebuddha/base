@@ -86,7 +86,7 @@ sig
 
 	val filteri : (int * 'a -> bool) -> 'a t -> 'a t
 
-	val partitionMap : ('a -> ('b, 'c) Utils.sum) -> 'a t -> ('b t * 'c t)
+	val partitionMap : ('a -> ('b, 'c) BaseEither.t) -> 'a t -> ('b t * 'c t)
 	(** [partitionMap f t] partitions [t] according to the 2-classifier. *)
 
 	(** [partition3Map] *)

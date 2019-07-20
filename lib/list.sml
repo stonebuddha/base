@@ -244,15 +244,15 @@ struct
 			fun loop fst snd [] = (rev fst, rev snd)
 				| loop fst snd (x :: xs) =
 					case f x of
-						INL y => loop (y :: fst) snd xs
-					| INR y => loop fst (y :: snd) xs
+						BaseEither.FIRST y => loop (y :: fst) snd xs
+					| BaseEither.SECOND y => loop fst (y :: snd) xs
 		in
 			loop [] [] t
 		end
 
-	fun partitionTF f t = partitionMap (fn x => if f x then INL x else INR x) t
+	fun partitionTF f t = partitionMap (fn x => if f x then BaseEither.FIRST x else BaseEither.SECOND x) t
 
-	fun partitionResult t = partitionMap (fn BaseResult.OK v => INL v | BaseResult.ERROR e => INR e) t
+	fun partitionResult t = partitionMap (fn BaseResult.OK v => BaseEither.FIRST v | BaseResult.ERROR e => BaseEither.SECOND e) t
 
 	fun splitN n l =
 		if n <= 0 then ([], l)

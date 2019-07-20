@@ -1,5 +1,6 @@
 Library
 	structure BContainer
+	structure BEither
 	structure BExn
 	structure BInt
 	structure BList
@@ -16,6 +17,8 @@ is
 	lib/exn.sml
 	lib/monad.fun
 	lib/sexpable.fun
+	lib/either.sig
+	lib/either.sml
 	lib/result.sig
 	lib/result.sml
 	lib/int.sig
