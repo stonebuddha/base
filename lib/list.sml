@@ -150,12 +150,7 @@ struct
 
 	fun revMap2 f l1 l2 = checkLength2 (revMap2Ok f) l1 l2
 
-	fun revMap2Exn f l1 l2 =
-		let
-			val () = checkLength2Exn "revMap2Exn" l1 l2
-		in
-			revMap2Ok f l1 l2
-		end
+	fun revMap2Exn f l1 l2 = (checkLength2Exn "revMap2Exn" l1 l2; revMap2Ok f l1 l2)
 
 	fun fold2Ok init f l1 l2 =
 		let
@@ -168,12 +163,7 @@ struct
 
 	fun fold2 init f l1 l2 = checkLength2 (fold2Ok init f) l1 l2
 
-	fun fold2Exn init f l1 l2 =
-		let
-			val () = checkLength2Exn "fold2Exn" l1 l2
-		in
-			fold2Ok init f l1 l2
-		end
+	fun fold2Exn init f l1 l2 = (checkLength2Exn "fold2Exn" l1 l2; fold2Ok init f l1 l2)
 
 	fun foralli f t =
 		let
@@ -197,12 +187,7 @@ struct
 
 	fun forall2 f l1 l2 = checkLength2 (forall2Ok f) l1 l2
 
-	fun forall2Exn f l1 l2 =
-		let
-			val () = checkLength2Exn "forall2Exn" l1 l2
-		in
-			forall2Ok f l1 l2
-		end
+	fun forall2Exn f l1 l2 = (checkLength2Exn "forall2Exn" l1 l2; forall2Ok f l1 l2)
 
 	fun exists2Ok _ [] [] = false
 		| exists2Ok f (x :: xs) (y :: ys) = f (x, y) orelse exists2Ok f xs ys
@@ -210,12 +195,7 @@ struct
 
 	fun exists2 f l1 l2 = checkLength2 (exists2Ok f) l1 l2
 
-	fun exists2Exn f l1 l2 =
-		let
-			val () = checkLength2Exn "exists2Exn" l1 l2
-		in
-			exists2Ok f l1 l2
-		end
+	fun exists2Exn f l1 l2 = (checkLength2Exn "exists2Exn" l1 l2; exists2Ok f l1 l2)
 
 	fun revFilter f t =
 		let
@@ -425,12 +405,7 @@ struct
 
 	fun map2 f l1 l2 = checkLength2 (map2Ok f) l1 l2
 
-	fun map2Exn f l1 l2 =
-		let
-			val () = checkLength2Exn "map2Exn" l1 l2
-		in
-			map2Ok f l1 l2
-		end
+	fun map2Exn f l1 l2 = (checkLength2Exn "map2Exn" l1 l2; map2Ok f l1 l2)
 
 	structure Monad = BaseMonad_Make1(
 		struct
@@ -463,12 +438,7 @@ struct
 
 	fun zip l1 l2 = map2 (fn (a, b) => (a, b)) l1 l2
 
-	fun zipExn l1 l2 =
-		let
-			val () = checkLength2Exn "zipExn" l1 l2
-		in
-			map2Ok (fn (a, b) => (a, b)) l1 l2
-		end
+	fun zipExn l1 l2 = (checkLength2Exn "zipExn" l1 l2; map2Ok (fn (a, b) => (a, b)) l1 l2)
 
 	fun revMapi f l =
 		let

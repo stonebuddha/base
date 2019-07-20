@@ -59,8 +59,8 @@ struct
 			val suite = "Base" >::: [
 				ListTest.suite
 			]
-			val () = runTestMain NONE suite
 		in
+			runTestMain NONE suite;
 			OS.Process.success
 		end
 end

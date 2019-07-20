@@ -59,27 +59,25 @@ struct
 						(EMPTY | LEAF _) => raise BadImplementation
 					| NODE {left = leftLeft, right = leftRight, ...} =>
 						if (height $ !leftLeft) >= (height $ !leftRight) then
-							let
-								val () = left := !leftRight
-								val () = leftRight := t
-								val () = updateHeights t
-								val () = updateHeights $ !left
-							in
+							let in
+								left := !leftRight;
+								leftRight := t;
+								updateHeights t;
+								updateHeights $ !left;
 								!left
 							end
 						else
 							case !leftRight of
 								(EMPTY | LEAF _) => raise BadImplementation
 							| NODE {left = lrLeft, right = lrRight, ...} =>
-								let
-									val () = leftRight := !lrLeft
-									val () = left := !lrRight
-									val () = lrRight := t
-									val () = lrLeft := !left
-									val () = updateHeights $ !left
-									val () = updateHeights t;
-									val () = updateHeights $ !leftRight
-								in
+								let in
+									leftRight := !lrLeft;
+									left := !lrRight;
+									lrRight := t;
+									lrLeft := !left;
+									updateHeights $ !left;
+									updateHeights t;
+									updateHeights $ !leftRight;
 									!leftRight
 								end
 				else if hr > hl + 2 then
@@ -87,33 +85,30 @@ struct
 						(EMPTY | LEAF _) => raise BadImplementation
 					| NODE {left = rightLeft, right = rightRight, ...} =>
 						if (height $ !rightRight) >= (height $ !rightLeft) then
-							let
-								val () = right := !rightLeft
-								val () = rightLeft := t
-								val () = updateHeights t
-								val () = updateHeights $ !right
-							in
+							let in
+								right := !rightLeft;
+								rightLeft := t;
+								updateHeights t;
+								updateHeights $ !right;
 								!right
 							end
 						else
 							case !rightLeft of
 								(EMPTY | LEAF _) => raise BadImplementation
 							| NODE {left = rlLeft, right = rlRight, ...} =>
-								let
-									val () = rightLeft := !rlRight
-									val () = right := !rlLeft
-									val () = rlLeft := t
-									val () = rlRight := !right
-									val () = updateHeights $ !right
-									val () = updateHeights t
-									val () = updateHeights $ !rightLeft
-								in
+								let in
+									rightLeft := !rlRight;
+									right := !rlLeft;
+									rlLeft := t;
+									rlRight := !right;
+									updateHeights $ !right;
+									updateHeights t;
+									updateHeights $ !rightLeft;
 									!rightLeft
 								end
 				else
-					let
-						val () = updateHeights t
-					in
+					let in
+						updateHeights t;
 						t
 					end
 			end
@@ -141,9 +136,8 @@ struct
 	fun add {replace, cmp, added} k v t =
 		let
 			fun aux EMPTY =
-					let
-						val () = added := true
-					in
+					let in
+						added := true;
 						LEAF {key = k, value = ref v}
 					end
 				| aux (t as (LEAF {key = k', value = v'})) =
@@ -151,16 +145,14 @@ struct
 						val c = cmp (k', k)
 					in
 						if c = 0 then
-							let
-								val () = added := false
-								val () = if replace then v' := v else ()
-							in
+							let in
+								added := false;
+								if replace then v' := v else ();
 								t
 							end
 						else
-							let
-								val () = added := true
-							in
+							let in
+								added := true;
 								if c < 0 then
 									NODE { left = ref t, key = k, value = ref v, height = ref 2, right = ref EMPTY }
 								else
@@ -184,5 +176,5 @@ struct
 			end
 		end
 
-	fun remove {removed, cmp} k t = raise BadImplementation
+	(* fun remove {removed, cmp} k t = raise BadImplementation *)
 end

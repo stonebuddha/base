@@ -167,64 +167,34 @@ struct
 
 	fun length fold c = fold 0 (fn (acc, _) => acc + 1) c
 
-	fun isEmpty iter c =
-		Cont.callcc(fn ret =>
-			let
-				val () = iter (fn _ => Cont.throw ret true) c
-			in
-				true
-			end)
+	fun isEmpty (iter : ('t, 'a) iter) c =
+		Cont.callcc(fn ret => (iter (fn _ => Cont.throw ret true) c; true))
 
-	fun exists iter f c =
-		Cont.callcc (fn ret =>
-			let
-				val () = iter (fn x => if f x then Cont.throw ret true else ()) c
-			in
-				false
-			end)
+	fun exists (iter : ('t, 'a) iter) f c =
+		Cont.callcc (fn ret => (iter (fn x => if f x then Cont.throw ret true else ()) c; false))
 
-	fun forall iter f c =
-		Cont.callcc (fn ret =>
-			let
-				val () = iter (fn x => if not (f x) then Cont.throw ret false else ()) c
-			in
-				true
-			end)
+	fun forall (iter : ('t, 'a) iter) f c =
+		Cont.callcc (fn ret => (iter (fn x => if not (f x) then Cont.throw ret false else ()) c; true))
 
-	fun find iter f c =
-		Cont.callcc (fn ret =>
-			let
-				val () = iter (fn x => if f x then Cont.throw ret (SOME x) else ()) c
-			in
-				NONE
-			end)
+	fun find (iter : ('t, 'a) iter) f c =
+		Cont.callcc (fn ret => (iter (fn x => if f x then Cont.throw ret (SOME x) else ()) c; NONE))
 
-	fun findMap iter f c =
-		Cont.callcc (fn ret =>
-			let
-				val () = iter (fn x =>
-					case f x of
-						NONE => ()
-					| (res as SOME _) => Cont.throw ret res) c
-			in
-				NONE
-			end)
+	fun findMap (iter : ('t, 'a) iter) f c =
+		Cont.callcc (fn ret => (iter (fn x => case f x of NONE => () | (res as SOME _) => Cont.throw ret res) c; NONE))
 
 	fun toList fold c = List.rev $ (fold [] (fn (acc, x) => x :: acc) c)
 
-	fun toArray length iter c =
+	fun toArray length (iter : ('t, 'a) iter) c =
 		let
 			val arr = ref NONE
 			val idx = ref 0
-			val () = iter (fn x =>
-				let
-					val () = if !idx = 0 then	arr := SOME (Array.array (length c, x)) else ()
-					val () = Array.update (Option.valOf $ !arr, !idx, x)
-					val () = idx := !idx + 1
-				in
-					()
-				end) c
 		in
+			iter (fn x =>
+				let in
+					if !idx = 0 then	arr := SOME (Array.array (length c, x)) else ();
+					Array.update (Option.valOf $ !arr, !idx, x);
+					idx := !idx + 1
+				end) c;
 			Option.valOf $ !arr
 		end
 end
