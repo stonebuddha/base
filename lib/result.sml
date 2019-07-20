@@ -5,7 +5,7 @@ struct
 	open BaseUtils
 	infixr 0 $
 
-	fun compare cmpOk cmpErr a b =
+	fun compare cmpOk cmpErr (a, b) =
 		if Cont.phyEq (a, b) then 0
 		else
 			case (a, b) of

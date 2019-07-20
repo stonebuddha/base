@@ -5,7 +5,7 @@ struct
 
 	type 'a t = 'a list
 
-	fun compare cmp a b =
+	fun compare cmp (a, b) =
 		case (a, b) of
 			([], []) => 0
 		| ([], _) => ~1
@@ -14,7 +14,7 @@ struct
 			let
 				val n = cmp (x, y)
 			in
-				if n = 0 then compare cmp xs ys else n
+				if n = 0 then compare cmp (xs, ys) else n
 			end
 
 	fun equal equal t1 t2 =
@@ -81,7 +81,7 @@ struct
 	struct
 		datatype 'a t = OK of 'a | UNEQUAL_LENGTHS
 
-		fun compare cmp a b =
+		fun compare cmp (a, b) =
 			if Cont.phyEq (a, b) then 0
 			else
 				case (a, b) of

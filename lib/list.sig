@@ -2,7 +2,7 @@ signature BASE_LIST =
 sig
 	type 'a t = 'a list
 
-	val compare : ('a * 'a -> int) -> 'a t -> 'a t -> int
+	val compare : ('a * 'a -> int) -> 'a t * 'a t -> int
 
 	(** {2 SExpable API} *)
 
@@ -23,7 +23,7 @@ sig
 	sig
 		datatype 'a t = OK of 'a | UNEQUAL_LENGTHS
 
-		val compare : ('a * 'a -> int) -> 'a t -> 'a t -> int
+		val compare : ('a * 'a -> int) -> 'a t * 'a t -> int
 		val toSExp : ('a -> SExp.value) -> 'a t -> SExp.value
 	end
 
