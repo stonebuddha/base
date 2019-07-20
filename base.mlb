@@ -19,6 +19,8 @@ in
 			lib/cont-mlton.sml
 			lib/utils.sml
 
+			lib/exn.sig
+			lib/exn.sml
 			lib/monad.fun
 			lib/sexpable.fun
 			lib/result.sig
@@ -28,12 +30,12 @@ in
 			lib/container.fun
 			lib/list.sig
 			lib/list.sml
-
-			lib/base.sig
-			lib/base.sml
 		in
-			signature BASE
-			structure Base
+			structure BContainer = BaseContainer
+			structure BExn = BaseExn
+			structure BInt = BaseInt
+			structure BList = BaseList
+			structure BResult = BaseResult
 		end
 	end
 end

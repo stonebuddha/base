@@ -1,6 +1,9 @@
 Library
-	signature BASE
-	structure Base
+	structure BContainer
+	structure BExn
+	structure BInt
+	structure BList
+	structure BResult
 is
 	$/basis.cm
 	$/smlnj-lib.cm
@@ -9,6 +12,8 @@ is
 	lib/cont-smlnj.sml
 	lib/utils.sml
 
+	lib/exn.sig
+	lib/exn.sml
 	lib/monad.fun
 	lib/sexpable.fun
 	lib/result.sig
@@ -19,5 +24,4 @@ is
 	lib/list.sig
 	lib/list.sml
 
-	lib/base.sig
-	lib/base.sml
+	lib/base-smlnj.sml

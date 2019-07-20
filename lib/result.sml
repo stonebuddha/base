@@ -1,9 +1,9 @@
 structure BaseResult : BASE_RESULT =
 struct
-	datatype ('ok, 'err) t = OK of 'ok | ERROR of 'err
-
-	open BaseUtils
+	open Utils BaseExn
 	infixr 0 $
+
+	datatype ('ok, 'err) t = OK of 'ok | ERROR of 'err
 
 	fun compare cmpOk cmpErr (a, b) =
 		if Cont.phyEq (a, b) then 0

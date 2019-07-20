@@ -1,9 +1,9 @@
 structure BaseInt : BASE_INT =
 struct
-	type t = int
-
-	open BaseUtils
+	open Utils BaseExn
 	infixr 0 $
+
+	type t = int
 
 	type sexpable = t
 

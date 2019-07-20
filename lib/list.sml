@@ -1,6 +1,6 @@
 structure BaseList : BASE_LIST =
 struct
-	open BaseUtils
+	open Utils BaseExn
 	infixr 0 $
 
 	type 'a t = 'a list

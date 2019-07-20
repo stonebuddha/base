@@ -3,23 +3,38 @@ struct
 	open SUnit
 	infix 9 >: >:: >:::
 
-	open Base
+	fun printerForSExp sexp =
+		let
+			fun printerForList [] = "()"
+				| printerForList [sexp] = "(" ^ printerForVal sexp ^ ")"
+				| printerForList (hd :: tl) = (List.foldl (fn (sexp, acc) => acc ^ " " ^ printerForVal sexp) ("(" ^ printerForVal hd) tl) ^ ")"
+			and printerForVal sexp =
+				case sexp of
+					SExp.SYMBOL a => Atom.toString a
+				| SExp.LIST sexps => printerForList sexps
+				| SExp.BOOL b => if b then "#t" else "#f"
+				| SExp.INT i => IntInf.toString i
+				| SExp.FLOAT r => Real.toString r
+				| SExp.STRING s => "\"" ^ s ^ "\""
+		in
+			printerForVal sexp
+		end
 
 	fun assertEqualForSExp (expected, actual) =
-		assertEqual SExpUtils.equal (SOME SExpUtils.printer) (expected, actual)
+		assertEqual SExp.same (SOME printerForSExp) (expected, actual)
 
 	structure ListTest =
 	struct
 		fun testFindExn () =
 			let
-				fun printer res = Result.toSExp Int.toSExp SExpUtils.fromExn res
+				fun printer res = BResult.toSExp BInt.toSExp BExn.toSExp res
 				fun test list =
-					printer (Result.tryWith (fn () => List.findExn (fn x => x < 0) list))
+					printer (BResult.tryWith (fn () => BList.findExn (fn x => x < 0) list))
 			in
-				assertEqualForSExp (printer (Result.ERROR (NotFound "BaseList.findExn: not found")), test []);
-				assertEqualForSExp (printer (Result.ERROR (NotFound "BaseList.findExn: not found")), test [1, 2, 3]);
-				assertEqualForSExp (printer (Result.OK ~1), test [~1, ~2, ~3]);
-				assertEqualForSExp (printer (Result.OK ~2), test [1, ~2, ~3])
+				assertEqualForSExp (printer (BResult.ERROR (BExn.NotFound "BaseList.findExn: not found")), test []);
+				assertEqualForSExp (printer (BResult.ERROR (BExn.NotFound "BaseList.findExn: not found")), test [1, 2, 3]);
+				assertEqualForSExp (printer (BResult.OK ~1), test [~1, ~2, ~3]);
+				assertEqualForSExp (printer (BResult.OK ~2), test [1, ~2, ~3])
 			end
 
 		val suite = "List" >::: [
@@ -32,7 +47,7 @@ struct
 			val suite = "Base" >::: [
 				ListTest.suite
 			]
-			val () = runTestMain suite
+			val () = runTestMain NONE suite
 		in
 			OS.Process.success
 		end

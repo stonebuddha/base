@@ -127,12 +127,12 @@ end
 
 structure BaseContainer : BASE_CONTAINER =
 struct
+	open Utils
+	infixr 0 $
+
 	type ('t, 'a, 'accum) fold = 'accum -> ('accum * 'a -> 'accum) -> 't -> 'accum
 	type ('t, 'a) iter = ('a -> unit) -> 't -> unit
 	type 't length = 't -> int
-
-	open BaseUtils
-	infixr 0 $
 
 	fun iter fold f t = fold () (fn ((), a) => f a) t
 

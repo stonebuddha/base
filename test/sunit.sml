@@ -1,8 +1,37 @@
-structure SUnit =
-struct
-	infixr 0 $
+signature SUNIT =
+sig
+	exception SUnitFailure of string
 
+	type test_fun = unit -> unit
+
+	datatype test =
+		TEST_CASE of test_fun
+	| TEST_LIST of test list
+	| TEST_LABEL of string * test
+
+	val assertEqual : ('a * 'a -> bool) -> ('a -> string) option -> 'a * 'a -> unit
+
+	val >: : string * test -> test
+	val >:: : string * test_fun -> test
+	val >::: : string * test list -> test
+
+	datatype node = LIST_ITEM of int | LABEL of string
+
+	type path = node list
+
+	datatype result =
+		R_SUCCESS
+	| R_FAILURE of path * string
+
+	type runner = (path * test_fun) list -> result list
+
+	val runTestMain : runner option -> test -> unit
+end
+
+structure SUnit :> SUNIT =
+struct
 	fun op$ (f, x) = f x
+	infixr 0 $
 
 	exception SUnitFailure of string
 
@@ -68,14 +97,14 @@ struct
 			runner testCases
 		end
 
-	fun runTestMain suite =
+	fun runTestMain runnerOpt suite =
 		let
-			val testResults = performTest sequentialRunner suite
+			val testResults = performTest (case runnerOpt of SOME runner => runner | NONE => sequentialRunner) suite
 			val printerForNode = fn LIST_ITEM cnt => Int.toString cnt | LABEL label => label
 			fun printerForPath [] = "[]"
 				| printerForPath path =
 					let
-						val str = List.foldl (fn (node, acc) => printerForNode node ^ "." ^ acc) (printerForNode (List.hd path)) (List.tl path)
+						val str = List.foldl (fn (node, acc) => printerForNode node ^ ":" ^ acc) (printerForNode (List.hd path)) (List.tl path)
 					in
 						"[" ^ str ^ "]"
 				 end
