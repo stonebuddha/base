@@ -1,10 +1,8 @@
 structure Cont =
 struct
-	structure M = SMLofNJ.Cont
+	fun callcc f = SMLofNJ.Cont.callcc f
 
-	fun callcc f = M.callcc f
-
-	fun throw k v = M.throw k v
+	fun throw k v = SMLofNJ.Cont.throw k v
 
 	fun phyEq (a, b) =
 		let
