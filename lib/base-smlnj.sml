@@ -16,5 +16,8 @@ structure BInt = BaseInt
 signature BLIST = BASE_LIST
 structure BList = BaseList
 
+signature BOPTION = BASE_OPTION
+structure BOption = BaseOption
+
 signature BRESULT = BASE_RESULT
 structure BResult = BaseResult

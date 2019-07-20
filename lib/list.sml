@@ -17,7 +17,7 @@ struct
 				if n = 0 then compare cmp (xs, ys) else n
 			end
 
-	fun equal equal t1 t2 =
+	fun equal equal (t1, t2) =
 		let
 			fun loop [] [] = true
 				| loop (x :: xs) (y :: ys) = equal (x, y) andalso loop xs ys
@@ -93,8 +93,6 @@ struct
 		fun toSExp forOk (OK x) = SExp.LIST [SExp.SYMBOL (Atom.atom "OK"), forOk x]
 			| toSExp _ UNEQUAL_LENGTHS = SExp.SYMBOL (Atom.atom "UNEQUAL_LENGTHS")
 	end
-
-	fun ofList l = l
 
 	fun nth l n = SOME $ List.nth (l, n) handle Subscript => NONE
 
@@ -526,4 +524,14 @@ struct
 		| _ => raise (InvalidArg "BaseList.fromSExp")
 
 	fun toSExp forElt l = SExp.LIST $ map forElt l
+
+	fun dropLast l =
+		case rev l of
+			[] => NONE
+		| _ :: tl => SOME (rev tl)
+
+	fun dropLastExn l =
+		case dropLast l of
+			SOME l => l
+		| NONE => raise (InvalidArg "BaseList.dropLastExn: empty list")
 end

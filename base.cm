@@ -17,6 +17,9 @@ Library
 	signature BLIST
 	structure BList
 
+	signature BOPTION
+	structure BOption
+
 	signature BRESULT
 	structure BResult
 is
@@ -33,6 +36,8 @@ is
 	lib/exn.sml
 	lib/monad.fun
 	lib/sexpable.fun
+	lib/option.sig
+	lib/option.sml
 	lib/either.sig
 	lib/either.sml
 	lib/result.sig

@@ -3,7 +3,6 @@ sig
 	type 'a monad
 
 	val bind : ('a -> 'b monad) -> 'a monad -> 'b monad
-
 	val return : 'a -> 'a monad
 end
 
@@ -27,7 +26,6 @@ sig
 	type ('a, 'e) monad
 
 	val bind: ('a -> ('b, 'e) monad) -> ('a, 'e) monad -> ('b, 'e) monad
-
 	val return : 'a -> ('a, 'e) monad
 end
 
@@ -49,7 +47,6 @@ sig
 	type ('a, 'd, 'e) monad
 
 	val bind : ('a -> ('b, 'd, 'e) monad) -> ('a, 'd, 'e) monad -> ('b, 'd, 'e) monad
-
 	val return: 'a -> ('a, 'd, 'e) monad
 end
 

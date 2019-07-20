@@ -9,6 +9,7 @@ sig
 	| TEST_LIST of test list
 	| TEST_LABEL of string * test
 
+	val assertFailure : string -> 'a
 	val assertEqual : ('a * 'a -> bool) -> ('a -> string) option -> 'a * 'a -> unit
 
 	val >: : string * test -> test
@@ -41,6 +42,8 @@ struct
 		TEST_CASE of test_fun
 	| TEST_LIST of test list
 	| TEST_LABEL of string * test
+
+	fun assertFailure msg = raise (SUnitFailure msg)
 
 	fun assertEqual equal printerOpt (expected, actual) =
 		if equal (expected, actual) then
