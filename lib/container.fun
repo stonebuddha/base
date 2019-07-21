@@ -1,4 +1,4 @@
-structure BaseContinueOrStop =
+structure ContinueOrStop =
 struct
 	datatype ('a, 'b) t = CONTINUE of 'a | STOP of 'b
 end
@@ -22,7 +22,7 @@ sig
 	val foldResult : 'accum -> ('accum * container_elt -> ('accum, 'e) BaseResult.t) -> ('accum, 'e) BaseResult.t
 	(** [foldResult init f t] is a short-circuiting version of [fold] that runs in the [Result] monad. *)
 
-	val foldUntil : 'accum -> ('accum * container_elt -> ('accum, 'final) BaseContinueOrStop.t) -> ('accum -> 'final) -> container -> 'final
+	val foldUntil : 'accum -> ('accum * container_elt -> ('accum, 'final) ContinueOrStop.t) -> ('accum -> 'final) -> container -> 'final
 	(** [foldUntil init f finish t] is a short-circuiting version of [fold]. *)
 
 	val exists : (container_elt -> bool) -> container -> bool
@@ -69,7 +69,7 @@ sig
 	val foldResult : 'accum -> ('accum * 'a -> ('accum, 'e) BaseResult.t) -> 'a container -> ('accum, 'e) BaseResult.t
 	(** [foldResult init f t] is a short-circuiting version of [fold] that runs in the [Result] monad. *)
 
-	val foldUntil : 'accum -> ('accum * 'a -> ('accum, 'final) BaseContinueOrStop.t) -> ('accum -> 'final) -> 'a container -> 'final
+	val foldUntil : 'accum -> ('accum * 'a -> ('accum, 'final) ContinueOrStop.t) -> ('accum -> 'final) -> 'a container -> 'final
 	(** [foldUntil init f finish t] is a short-circuiting version of [fold]. *)
 
 	val exists : ('a -> bool) -> 'a container -> bool
@@ -101,6 +101,11 @@ end
 
 signature BASE_CONTAINER =
 sig
+	structure ContinueOrStop :
+	sig
+		datatype ('a, 'b) t = CONTINUE of 'a | STOP of 'b
+	end
+
 	type ('t, 'a, 'accum) fold = 'accum -> ('accum * 'a -> 'accum) -> 't -> 'accum
 	type ('t, 'a) iter = ('a -> unit) -> 't -> unit
 	type 't length = 't -> int
@@ -114,7 +119,7 @@ sig
 	val toList : ('t, 'a, 'a list) fold -> 't -> 'a list
 	val sum : ('t, 'a, 'sum) fold -> {zero : 'sum, + : 'sum * 'sum -> 'sum} -> ('a -> 'sum) -> 't -> 'sum
 	val foldResult : ('t, 'a, 'b) fold -> 'b -> ('b * 'a -> ('b , 'e) BaseResult.t) -> 't -> ('b, 'e) BaseResult.t
-	val foldUntil : ('t, 'a, 'b) fold -> 'b -> ('b * 'a -> ('b, 'final) BaseContinueOrStop.t) -> ('b -> 'final) -> 't -> 'final
+	val foldUntil : ('t, 'a, 'b) fold -> 'b -> ('b * 'a -> ('b, 'final) ContinueOrStop.t) -> ('b -> 'final) -> 't -> 'final
 
 	(** Generic definitions of container operations in terms of [iter] and [length]. *)
 	val isEmpty : ('t, 'a) iter -> 't -> bool
@@ -129,6 +134,8 @@ structure BaseContainer : BASE_CONTAINER =
 struct
 	open Utils
 	infixr 0 $
+
+	structure ContinueOrStop = ContinueOrStop
 
 	type ('t, 'a, 'accum) fold = 'accum -> ('accum * 'a -> 'accum) -> 't -> 'accum
 	type ('t, 'a) iter = ('a -> unit) -> 't -> unit
@@ -152,8 +159,8 @@ struct
 			Cont.callcc (fn ret =>
 					finish $ fold init (fn (acc, item) =>
 							case f (acc, item) of
-								BaseContinueOrStop.CONTINUE x => x
-							| BaseContinueOrStop.STOP x => Cont.throw ret x) t)
+								ContinueOrStop.CONTINUE x => x
+							| ContinueOrStop.STOP x => Cont.throw ret x) t)
 
 	fun minElt fold cmp t = fold NONE (fn (acc, elt) =>
 					case acc of
