@@ -80,12 +80,12 @@ struct
 	fun ignoreM t = t >>| (fn _ => ())
 
 	fun all ts =
-		let
-			fun loop vs [] = return (List.rev vs)
-				| loop vs (t :: ts) = t >>= (fn v => loop (v :: vs) ts)
-		in
-			loop [] ts
-		end
+			let
+				fun loop vs [] = return (List.rev vs)
+					| loop vs (t :: ts) = t >>= (fn v => loop (v :: vs) ts)
+			in
+				loop [] ts
+			end
 
 	fun allUnit [] = return ()
 		| allUnit (t :: ts) = t >>= (fn () => allUnit ts)
@@ -99,10 +99,10 @@ functor BaseMonad_Make1 (X : BASE_MONAD_BASIC1) : BASE_MONAD_S1 where type 'a mo
 				type ('a, 'd, 'e) monad = 'a X.monad
 			end)
 	in
-		struct
-			open G
-			type 'a monad = 'a X.monad
-		end
+	struct
+		open G
+		type 'a monad = 'a X.monad
+	end
 	end
 
 functor BaseMonad_Make2 (X : BASE_MONAD_BASIC2) : BASE_MONAD_S2 where type ('a, 'e) monad = ('a, 'e) X.monad =
@@ -113,8 +113,8 @@ functor BaseMonad_Make2 (X : BASE_MONAD_BASIC2) : BASE_MONAD_S2 where type ('a, 
 				type ('a, 'd, 'e) monad = ('a, 'd) X.monad
 			end)
 	in
-		struct
-			open G
-			type ('a, 'e) monad = ('a, 'e) X.monad
-		end
+	struct
+		open G
+		type ('a, 'e) monad = ('a, 'e) X.monad
+	end
 	end

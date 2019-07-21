@@ -46,17 +46,17 @@ struct
 	fun assertFailure msg = raise (SUnitFailure msg)
 
 	fun assertEqual equal printerOpt (expected, actual) =
-		if equal (expected, actual) then
-			()
-		else
-			let
-				val msg =
-					case printerOpt of
-						SOME printer => "expected: " ^ (printer expected) ^ " but got: " ^ (printer actual)
-					| NONE => "not equal"
-			in
-				raise (SUnitFailure msg)
-			end
+			if equal (expected, actual) then
+				()
+			else
+				let
+					val msg =
+						case printerOpt of
+							SOME printer => "expected: " ^ (printer expected) ^ " but got: " ^ (printer actual)
+						| NONE => "not equal"
+				in
+					raise (SUnitFailure msg)
+				end
 
 	val op>: = TEST_LABEL
 
@@ -75,43 +75,43 @@ struct
 	type runner = (path * test_fun) list -> result list
 
 	fun sequentialRunner testCases =
-		let
-			fun runner (path, f) =
-				let
-					val () = f ()
-				in
-					R_SUCCESS
-				end
-				handle SUnitFailure msg => R_FAILURE (path, msg)
-		in
-			List.map runner testCases
-		end
+			let
+				fun runner (path, f) =
+						let
+							val () = f ()
+						in
+							R_SUCCESS
+						end
+						handle SUnitFailure msg => R_FAILURE (path, msg)
+			in
+				List.map runner testCases
+			end
 
 	fun performTest runner test =
-		let
-			fun flattenTest (path, acc) test =
-				case test of
-					TEST_CASE f => (path, f) :: acc
-				| TEST_LIST tests => #2 $ List.foldl (fn (t, (cnt, acc)) => (cnt + 1, flattenTest (LIST_ITEM cnt :: path, acc) t)) (0, acc) tests
-				| TEST_LABEL (label, t) => flattenTest (LABEL label :: path, acc) t
+			let
+				fun flattenTest (path, acc) test =
+						case test of
+							TEST_CASE f => (path, f) :: acc
+						| TEST_LIST tests => #2 $ List.foldl (fn (t, (cnt, acc)) => (cnt + 1, flattenTest (LIST_ITEM cnt :: path, acc) t)) (0, acc) tests
+						| TEST_LABEL (label, t) => flattenTest (LABEL label :: path, acc) t
 
-			val testCases = List.rev $ flattenTest ([], []) test
-		in
-			runner testCases
-		end
+				val testCases = List.rev $ flattenTest ([], []) test
+			in
+				runner testCases
+			end
 
 	fun runTestMain runnerOpt suite =
-		let
-			val testResults = performTest (case runnerOpt of SOME runner => runner | NONE => sequentialRunner) suite
-			val printerForNode = fn LIST_ITEM cnt => Int.toString cnt | LABEL label => label
-			fun printerForPath [] = "[]"
-				| printerForPath path =
-					let
-						val str = List.foldl (fn (node, acc) => printerForNode node ^ ":" ^ acc) (printerForNode (List.hd path)) (List.tl path)
-					in
-						"[" ^ str ^ "]"
-				 end
-		in
-			List.app (fn R_SUCCESS => () | R_FAILURE (path, msg) => print $ (printerForPath path) ^ ": " ^ msg ^ "\n") testResults
-		end
+			let
+				val testResults = performTest (case runnerOpt of SOME runner => runner | NONE => sequentialRunner) suite
+				val printerForNode = fn LIST_ITEM cnt => Int.toString cnt | LABEL label => label
+				fun printerForPath [] = "[]"
+					| printerForPath path =
+						let
+							val str = List.foldl (fn (node, acc) => printerForNode node ^ ":" ^ acc) (printerForNode (List.hd path)) (List.tl path)
+						in
+							"[" ^ str ^ "]"
+						end
+			in
+				List.app (fn R_SUCCESS => () | R_FAILURE (path, msg) => print $ (printerForPath path) ^ ": " ^ msg ^ "\n") testResults
+			end
 end

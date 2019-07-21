@@ -141,60 +141,60 @@ struct
 	fun sum fold {zero, +} f t = fold zero (fn (n, a) => n + (f a)) t
 
 	fun foldResult fold init f t =
-		Cont.callcc (fn ret =>
-			BaseResult.OK $
-				fold init (fn (acc, item) =>
-					case f (acc, item) of
-						BaseResult.OK x => x
-					| (e as BaseResult.ERROR _) => Cont.throw ret e) t)
+			Cont.callcc (fn ret =>
+					BaseResult.OK $
+					fold init (fn (acc, item) =>
+							case f (acc, item) of
+								BaseResult.OK x => x
+							| (e as BaseResult.ERROR _) => Cont.throw ret e) t)
 
 	fun foldUntil fold init f finish t =
-		Cont.callcc (fn ret =>
-			finish $ fold init (fn (acc, item) =>
-				case f (acc, item) of
-					BaseContinueOrStop.CONTINUE x => x
-				| BaseContinueOrStop.STOP x => Cont.throw ret x) t)
+			Cont.callcc (fn ret =>
+					finish $ fold init (fn (acc, item) =>
+							case f (acc, item) of
+								BaseContinueOrStop.CONTINUE x => x
+							| BaseContinueOrStop.STOP x => Cont.throw ret x) t)
 
 	fun minElt fold cmp t = fold NONE (fn (acc, elt) =>
-		case acc of
-			NONE => SOME elt
-		| SOME min => if cmp (min, elt) > 0 then SOME elt else acc) t
+					case acc of
+						NONE => SOME elt
+					| SOME min => if cmp (min, elt) > 0 then SOME elt else acc) t
 
 	fun maxElt fold cmp t = fold NONE (fn (acc, elt) =>
-		case acc of
-			NONE => SOME elt
-		| SOME max => if cmp (max, elt) < 0 then SOME elt else acc) t
+					case acc of
+						NONE => SOME elt
+					| SOME max => if cmp (max, elt) < 0 then SOME elt else acc) t
 
 	fun length fold c = fold 0 (fn (acc, _) => acc + 1) c
 
 	fun isEmpty (iter : ('t, 'a) iter) c =
-		Cont.callcc(fn ret => (iter (fn _ => Cont.throw ret true) c; true))
+			Cont.callcc(fn ret => (iter (fn _ => Cont.throw ret true) c; true))
 
 	fun exists (iter : ('t, 'a) iter) f c =
-		Cont.callcc (fn ret => (iter (fn x => if f x then Cont.throw ret true else ()) c; false))
+			Cont.callcc (fn ret => (iter (fn x => if f x then Cont.throw ret true else ()) c; false))
 
 	fun forall (iter : ('t, 'a) iter) f c =
-		Cont.callcc (fn ret => (iter (fn x => if not (f x) then Cont.throw ret false else ()) c; true))
+			Cont.callcc (fn ret => (iter (fn x => if not (f x) then Cont.throw ret false else ()) c; true))
 
 	fun find (iter : ('t, 'a) iter) f c =
-		Cont.callcc (fn ret => (iter (fn x => if f x then Cont.throw ret (SOME x) else ()) c; NONE))
+			Cont.callcc (fn ret => (iter (fn x => if f x then Cont.throw ret (SOME x) else ()) c; NONE))
 
 	fun findMap (iter : ('t, 'a) iter) f c =
-		Cont.callcc (fn ret => (iter (fn x => case f x of NONE => () | (res as SOME _) => Cont.throw ret res) c; NONE))
+			Cont.callcc (fn ret => (iter (fn x => case f x of NONE => () | (res as SOME _) => Cont.throw ret res) c; NONE))
 
 	fun toList fold c = List.rev $ (fold [] (fn (acc, x) => x :: acc) c)
 
 	fun toArray length (iter : ('t, 'a) iter) c =
-		let
-			val arr = ref NONE
-			val idx = ref 0
-		in
-			iter (fn x =>
-				let in
-					if !idx = 0 then	arr := SOME (Array.array (length c, x)) else ();
-					Array.update (Option.valOf $ !arr, !idx, x);
-					idx := !idx + 1
-				end) c;
-			Option.valOf $ !arr
-		end
+			let
+				val arr = ref NONE
+				val idx = ref 0
+			in
+				iter (fn x =>
+						let in
+							if !idx = 0 then	arr := SOME (Array.array (length c, x)) else ();
+							Array.update (Option.valOf $ !arr, !idx, x);
+							idx := !idx + 1
+						end) c;
+				Option.valOf $ !arr
+			end
 end
