@@ -56,4 +56,4 @@ endif
 
 _build/mlton/$(TEST): _build/mlton/$(TEST).mlb.mk
 	mkdir -p $(@D)
-	$(MLTON) -prefer-abs-paths true -show-def-use $(TEST).du -output $@ $(TEST).mlb
+	$(MLTON) -prefer-abs-paths true -show-def-use $(TEST).du -show-basis $(TEST).basis -output $@ $(TEST).mlb
