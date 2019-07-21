@@ -15,7 +15,7 @@ mlton: _build/$(TEST).opt
 
 .PHONY: clean
 clean:
-	rm -rf _build .cm lib/.cm test/.cm *.du *.ud
+	rm -rf _build .cm lib/.cm test/.cm *.du *.ud *.basis
 
 _build/$(TEST): _build/smlnj/$(TEST).$(SUFFIX) _build/smlnj/$(TEST)-wrapper.sh
 	mkdir -p $(@D)
