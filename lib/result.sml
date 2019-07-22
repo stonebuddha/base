@@ -6,12 +6,12 @@ struct
 	datatype ('ok, 'err) t = OK of 'ok | ERROR of 'err
 
 	fun compare cmpOk cmpErr (a, b) =
-			if Cont.phyEq (a, b) then 0
+			if Cont.phyEq (a, b) then EQUAL
 			else
 				case (a, b) of
 					(OK a, OK b) => cmpOk (a, b)
-				| (OK _, _) => ~1
-				| (_, OK _) => 1
+				| (OK _, _) => LESS
+				| (_, OK _) => GREATER
 				| (ERROR a, ERROR b) => cmpErr (a, b)
 
 	type ('ok, 'err) sexpable = ('ok, 'err) t
@@ -47,43 +47,42 @@ struct
 				| bind _ (ERROR e) = ERROR e
 
 			fun return x = OK x
+
+			val mapCustom = SOME (fn f => fn m => case m of OK x => OK (f x) | ERROR e => ERROR e)
 		end)
 	open Monad
 
 	fun fail e = ERROR e
 
-	fun isOK (OK _) = true
-		| isOK (ERROR _) = false
+	fun isOk (OK _) = true
+		| isOk (ERROR _) = false
 
-	fun isERROR (OK _) = false
-		| isERROR (ERROR _) = true
+	fun isError (OK _) = false
+		| isError (ERROR _) = true
 
-	fun getOK (OK x) = SOME x
-		| getOK (ERROR _) = NONE
+	fun ok (OK x) = SOME x
+		| ok (ERROR _) = NONE
 
-	fun getOKExn (OK x) = x
-		| getOKExn (ERROR e) = raise e
+	fun okExn (OK x) = x
+		| okExn (ERROR e) = raise e
 
-	fun getOKOrFail (OK x) = x
-		| getOKOrFail (ERROR msg) = raise (Fail msg)
+	fun okOrFail (OK x) = x
+		| okOrFail (ERROR msg) = raise (Fail msg)
 
-	fun getERROR (OK _) = NONE
-		| getERROR (ERROR e) = SOME e
+	fun error (OK _) = NONE
+		| error (ERROR e) = SOME e
 
 	fun ofOption _ (SOME x) = OK x
 		| ofOption e NONE = ERROR e
 
-	fun iterOK f (OK x) = f x
-		| iterOK _ (ERROR _) = ()
+	fun iter f (OK x) = f x
+		| iter _ (ERROR _) = ()
 
-	fun iterERROR _ (OK _) = ()
-		| iterERROR f (ERROR e) = f e
+	fun iterError _ (OK _) = ()
+		| iterError f (ERROR e) = f e
 
-	fun mapOK f (OK x) = OK (f x)
-		| mapOK _ (ERROR e) = ERROR e
-
-	fun mapERROR _ (OK x) = OK x
-		| mapERROR f (ERROR e) = ERROR (f e)
+	fun mapError _ (OK x) = OK x
+		| mapError f (ERROR e) = ERROR (f e)
 
 	fun combine cmbOk cmbErr t1 t2 =
 			case (t1, t2) of
@@ -93,4 +92,7 @@ struct
 
 	fun tryWith f =
 			OK (f ()) handle exn => ERROR exn
+
+	fun toEither (OK x) = BaseEither.FIRST x
+		| toEither (ERROR e) = BaseEither.SECOND e
 end

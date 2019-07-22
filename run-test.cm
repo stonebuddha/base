@@ -1,7 +1,5 @@
 Group is
 	$/basis.cm
-	$/smlnj-lib.cm
-	$/sexp-lib.cm
 
 	base.cm
 

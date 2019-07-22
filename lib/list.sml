@@ -7,15 +7,17 @@ struct
 
 	fun compare cmp (a, b) =
 			case (a, b) of
-				([], []) => 0
-			| ([], _) => ~1
-			| (_, []) => 1
+				([], []) => EQUAL
+			| ([], _) => LESS
+			| (_, []) => GREATER
 			| (x :: xs, y :: ys) =>
 				let
 					val n = cmp (x, y)
 				in
-					if n = 0 then compare cmp (xs, ys) else n
+					if n = EQUAL then compare cmp (xs, ys) else n
 				end
+
+	type 'a equable = 'a t
 
 	fun equal equal (t1, t2) =
 			let
@@ -412,6 +414,8 @@ struct
 			fun bind f x = concatMap f x
 
 			fun return x = [x]
+
+			val mapCustom = SOME map
 		end)
 	type 'a monad = 'a Monad.monad
 	val op>>= = Monad.>>=

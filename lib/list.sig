@@ -2,13 +2,17 @@ signature BASE_LIST =
 sig
 	type 'a t = 'a list
 
-	val compare : ('a * 'a -> int) -> 'a t * 'a t -> int
-	val equal : ('a * 'a -> bool) -> 'a t * 'a t -> bool
+	val compare : ('a * 'a -> order) -> 'a t * 'a t -> order
 
 	structure Infix :
 	sig
 		val @ : 'a t * 'a t -> 'a t
 	end
+
+
+	(** {2 Equable API} *)
+
+	include BASE_EQUABLE_S1 where type 'a equable = 'a t
 
 
 	(** {2 SExpable API} *)
@@ -18,7 +22,7 @@ sig
 
 	(** {2 Container API} *)
 
-	include BASE_CONTAINER_S1 where type 'a container = 'a t
+	include BASE_CONTAINER_INDEXED_S1 where type 'a container = 'a t
 
 
 	(** {2 Monad API} *)
@@ -63,15 +67,6 @@ sig
 	val foldRight : 'accum -> ('a * 'accum -> 'accum) -> 'a t -> 'accum
 	(** Reimplementation of the standard [List.foldr] function. *)
 
-	(* val iter : ('a -> unit) -> 'a t -> unit *)
-	val iteri : (int * 'a -> unit) -> 'a t -> unit
-	(** Like [List.iter], but passes the index as an argument. *)
-
-	(* val fold : 'accum -> ('accum * 'a -> 'accum) -> 'a t -> 'accum *)
-	val foldi : 'accum -> (int * 'accum * 'a -> 'accum) -> 'a t -> 'accum
-	(** Like [List.fold], but passes the index as an argument. *)
-
-	(* val map : ('a -> 'b) -> 'a t -> 'b t *)
 	val mapi : (int * 'a -> 'b) -> 'a t -> 'b t
 	(** Like [map], but passes the index as an argument. *)
 
@@ -89,30 +84,12 @@ sig
 	val revFilter : ('a -> bool) -> 'a t -> 'a t
 	(** Like [List.filter], but reverses the order of the result. *)
 
-	(* val find : ('a -> bool) -> 'a t -> 'a option *)
 	val findExn : ('a -> bool) -> 'a t -> 'a
 	(** [findExn f t] returns the first element of [t] that satisfies the predicate. It reaises [NotFound] if there is no such element. *)
-	val findi : (int * 'a -> bool) -> 'a t -> (int * 'a) option
 
-	(* val forall : ('a -> bool) -> 'a t -> bool *)
-	val foralli : (int * 'a -> bool) -> 'a t -> bool
-	(** Like [List.forall], but passes the index as an argument. *)
-
-	(* val exists : ('a -> bool) -> 'a t -> bool *)
-	val existsi : (int * 'a -> bool) -> 'a t -> bool
-	(** Like [List.exists], but passes the index as an argument. *)
-
-	(* val count : ('a -> bool) -> 'a t -> int *)
-	val counti : (int * 'a -> bool) -> 'a t -> int
-	(** Like [count], but passes the index as an argument. *)
-
-	(* val findMap : ('a -> 'b option) -> 'a t -> 'b option *)
 	val findMapExn : ('a -> 'b option) -> 'a t -> 'b
 	(** Like [findMap], but raises [NotFound] if there is no element that satisfies the predicate. *)
-	val findMapi : (int * 'a -> 'b option) -> 'a t -> 'b option
-	(** Like [findMap], but passes the index as an argument. *)
 	val findMapiExn : (int * 'a -> 'b option) -> 'a t -> 'b
-	(** [findMapiExn] *)
 
 	val revFilterMap : ('a -> 'b option) -> 'a t -> 'b t
 	val revFilterMapi : (int * 'a -> 'b option) -> 'a t -> 'b t

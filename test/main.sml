@@ -3,31 +3,14 @@ struct
 	open SUnit
 	infix 9 >: >:: >:::
 
-	fun printerForSExp sexp =
-			let
-				fun printerForList [] = "()"
-					| printerForList [sexp] = "(" ^ printerForVal sexp ^ ")"
-					| printerForList (hd :: tl) = (List.foldl (fn (sexp, acc) => acc ^ " " ^ printerForVal sexp) ("(" ^ printerForVal hd) tl) ^ ")"
-				and printerForVal sexp =
-						case sexp of
-							SExp.SYMBOL a => Atom.toString a
-						| SExp.LIST sexps => printerForList sexps
-						| SExp.BOOL b => if b then "#t" else "#f"
-						| SExp.INT i => IntInf.toString i
-						| SExp.FLOAT r => Real.toString r
-						| SExp.STRING s => "\"" ^ s ^ "\""
-			in
-				printerForVal sexp
-			end
-
 	fun assertEqualForSExp (expected, actual) =
-			assertEqual SExp.same (SOME printerForSExp) (expected, actual)
+			assertEqual BSExpLib.equal (SOME BSExpLib.toString) (expected, actual)
 
 	fun assertEqualForIntList (expected, actual) =
-			assertEqual (BList.equal op=) (SOME (printerForSExp o BList.toSExp BInt.toSExp)) (expected, actual)
+			assertEqual (BList.equal op=) (SOME (BSExpLib.toString o BList.toSExp BInt.toSExp)) (expected, actual)
 
 	fun assertEqualForIntOption (expected, actual) =
-			assertEqual (BOption.equal op=) (SOME (printerForSExp o BOption.toSExp BInt.toSExp)) (expected, actual)
+			assertEqual (BOption.equal op=) (SOME (BSExpLib.toString o BOption.toSExp BInt.toSExp)) (expected, actual)
 
 	fun assertEqualForBool (expected, actual) =
 			assertEqual op= (SOME (fn true => "true" | false => "false")) (expected, actual)

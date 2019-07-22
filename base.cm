@@ -5,6 +5,8 @@ Library
 	signature BCONTAINER
 	structure BContainer
 
+	structure BContinueOrStop
+
 	signature BEITHER
 	structure BEither
 
@@ -22,6 +24,9 @@ Library
 
 	signature BRESULT
 	structure BResult
+
+	signature BSEXP_LIB
+	structure BSExpLib
 is
 	$/basis.cm
 	$/smlnj-lib.cm
@@ -30,22 +35,31 @@ is
 	lib/cont-smlnj.sml
 	lib/utils.sml
 
-	lib/avl.sig
-	lib/avl.sml
+	lib/equable.fun
+	lib/sexpable.fun
+	lib/monad.fun
+
 	lib/exn.sig
 	lib/exn.sml
-	lib/monad.fun
-	lib/sexpable.fun
-	lib/option.sig
-	lib/option.sml
+
 	lib/either.sig
 	lib/either.sml
 	lib/result.sig
 	lib/result.sml
-	lib/int.sig
-	lib/int.sml
+
 	lib/container.fun
+
+	lib/option.sig
+	lib/option.sml
 	lib/list.sig
 	lib/list.sml
+	lib/int.sig
+	lib/int.sml
+
+	lib/sexplib.sig
+	lib/sexplib.sml
+
+	lib/avl.sig
+	lib/avl.sml
 
 	lib/base-smlnj.sml

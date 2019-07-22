@@ -20,9 +20,9 @@ struct
 	fun invariant cmp =
 			let
 				fun legalLeftKey _ EMPTY = ()
-					| legalLeftKey key (LEAF {key = leftKey, ...} | NODE {key=leftKey, ...}) = assert (cmp (leftKey, key) < 0)
+					| legalLeftKey key (LEAF {key = leftKey, ...} | NODE {key=leftKey, ...}) = assert (cmp (leftKey, key) = LESS)
 				fun legalRightKey _ EMPTY = ()
-					| legalRightKey key (LEAF {key = rightKey, ...} | NODE {key=rightKey, ...}) = assert (cmp (rightKey, key) > 0)
+					| legalRightKey key (LEAF {key = rightKey, ...} | NODE {key=rightKey, ...}) = assert (cmp (rightKey, key) = GREATER)
 				fun inv (EMPTY | LEAF _) = ()
 					| inv (NODE {left, key = k, height = h, right, ...}) =
 						let
@@ -144,7 +144,7 @@ struct
 						let
 							val c = cmp (k', k)
 						in
-							if c = 0 then
+							if c = EQUAL then
 								let in
 									added := false;
 									if replace then v' := v else ();
@@ -153,7 +153,7 @@ struct
 							else
 								let in
 									added := true;
-									if c < 0 then
+									if c = LESS then
 										NODE { left = ref t, key = k, value = ref v, height = ref 2, right = ref EMPTY }
 									else
 										NODE { left = ref EMPTY, key = k, value = ref v, height = ref 2, right = ref t }
@@ -163,8 +163,8 @@ struct
 						let
 							val c = cmp (k, k')
 						in
-							if c = 0 then (added := false; if replace then v' := v else ())
-							else if c < 0 then setLeft t (aux $ !left)
+							if c = EQUAL then (added := false; if replace then v' := v else ())
+							else if c = LESS then setLeft t (aux $ !left)
 								else setRight t (aux $ !right);
 							t
 						end
@@ -175,6 +175,4 @@ struct
 					if !added then balance t else t
 				end
 			end
-
-	(* fun remove {removed, cmp} k t = raise BadImplementation *)
 end

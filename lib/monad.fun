@@ -4,6 +4,7 @@ sig
 
 	val bind : ('a -> 'b monad) -> 'a monad -> 'b monad
 	val return : 'a -> 'a monad
+	val mapCustom : (('a -> 'b) -> 'a monad -> 'b monad) option
 end
 
 signature BASE_MONAD_S1 =
@@ -25,8 +26,9 @@ signature BASE_MONAD_BASIC2 =
 sig
 	type ('a, 'e) monad
 
-	val bind: ('a -> ('b, 'e) monad) -> ('a, 'e) monad -> ('b, 'e) monad
+	val bind : ('a -> ('b, 'e) monad) -> ('a, 'e) monad -> ('b, 'e) monad
 	val return : 'a -> ('a, 'e) monad
+	val mapCustom : (('a -> 'b) -> ('a, 'e) monad -> ('b, 'e) monad) option
 end
 
 signature BASE_MONAD_S2 =
@@ -47,7 +49,8 @@ sig
 	type ('a, 'd, 'e) monad
 
 	val bind : ('a -> ('b, 'd, 'e) monad) -> ('a, 'd, 'e) monad -> ('b, 'd, 'e) monad
-	val return: 'a -> ('a, 'd, 'e) monad
+	val return : 'a -> ('a, 'd, 'e) monad
+	val mapCustom : (('a -> 'b) -> ('a, 'd, 'e) monad -> ('b, 'd, 'e) monad) option
 end
 
 signature BASE_MONAD_S_GENERAL =
@@ -67,7 +70,12 @@ functor BaseMonad_MakeGeneral (X : BASE_MONAD_BASIC_GENERAL) : BASE_MONAD_S_GENE
 struct
 	open X
 
-	fun map f m = bind (fn a => return (f a)) m
+	fun mapViaBind f m = bind (fn a => return (f a)) m
+
+	fun map f m =
+			case X.mapCustom of
+				NONE => mapViaBind f m
+			| SOME map => map f m
 
 	fun op>>= (t, f) = bind f t
 

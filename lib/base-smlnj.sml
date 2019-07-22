@@ -4,6 +4,8 @@ structure BAvl = BaseAvl
 signature BCONTAINER = BASE_CONTAINER
 structure BContainer = BaseContainer
 
+structure BContinueOrStop = BaseContinueOrStop
+
 signature BEITHER = BASE_EITHER
 structure BEither = BaseEither
 
@@ -21,3 +23,6 @@ structure BOption = BaseOption
 
 signature BRESULT = BASE_RESULT
 structure BResult = BaseResult
+
+signature BSEXP_LIB = BASE_SEXP_LIB
+structure BSExpLib = BaseSExpLib
