@@ -1,6 +1,12 @@
 signature BAVL = BASE_AVL
 structure BAvl = BaseAvl
 
+signature BBOOL = BASE_BOOL
+structure BBool = BaseBool
+
+signature BCOMPARABLE = BASE_COMPARABLE
+functor BComparable_Make = BaseComparable_Make
+
 signature BCONTAINER = BASE_CONTAINER
 structure BContainer = BaseContainer
 
@@ -26,3 +32,6 @@ structure BResult = BaseResult
 
 signature BSEXP_LIB = BASE_SEXP_LIB
 structure BSExpLib = BaseSExpLib
+
+signature BUNIT = BASE_UNIT
+structure BUnit = BaseUnit

@@ -293,7 +293,7 @@ struct
 			| _ => t
 
 	fun stableSort cmp l =
-			ListMergeSort.sort (fn (a, b) => cmp (a, b) > 0) l
+			ListMergeSort.sort (fn (a, b) => cmp (a, b) = GREATER) l
 
 	val sort = stableSort
 
@@ -302,7 +302,7 @@ struct
 				fun loop acc [] l2 = revAppend acc l2
 					| loop acc l1 [] = revAppend acc l1
 					| loop acc (x :: xs) (y :: ys) =
-						if cmp (x, y) <= 0 then
+						if cmp (x, y) <> GREATER then
 							loop (x :: acc) xs l2
 						else
 							loop (y :: acc) l1 ys
@@ -460,15 +460,7 @@ struct
 		| last (_ :: tl) = last tl
 		| last [] = NONE
 
-	fun dedupAndSort cmp l =
-			ListMergeSort.uniqueSort (fn (a, b) =>
-					let
-						val c = cmp (a, b)
-					in
-						if c = 0 then EQUAL
-						else if c > 0 then GREATER
-							else LESS
-					end) l
+	fun dedupAndSort cmp l = ListMergeSort.uniqueSort cmp l
 
 	fun counti f t =
 			foldi 0 (fn (idx, cnt, a) => if f (idx, a) then cnt + 1 else cnt) t
@@ -510,10 +502,10 @@ struct
 	fun cons x l = x :: l
 
 	fun isSorted cmp l =
-			ListMergeSort.sorted (fn (a, b) => cmp (a, b) > 0) l
+			ListMergeSort.sorted (fn (a, b) => cmp (a, b) = GREATER) l
 
 	fun isSortedStrictly cmp l =
-			ListMergeSort.sorted (fn (a, b) => cmp (a, b) >= 0) l
+			ListMergeSort.sorted (fn (a, b) => cmp (a, b) <> LESS) l
 
 	structure Infix =
 	struct

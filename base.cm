@@ -2,6 +2,12 @@ Library
 	signature BAVL
 	structure BAvl
 
+	signature BBOOL
+	structure BBool
+
+	signature BCOMPARABLE
+	functor BComparable_Make
+
 	signature BCONTAINER
 	structure BContainer
 
@@ -27,6 +33,9 @@ Library
 
 	signature BSEXP_LIB
 	structure BSExpLib
+
+	signature BUNIT
+	structure BUnit
 is
 	$/basis.cm
 	$/smlnj-lib.cm
@@ -35,8 +44,11 @@ is
 	lib/cont-smlnj.sml
 	lib/utils.sml
 
-	lib/equable.fun
+	lib/stringable.fun
+	lib/intable.fun
 	lib/sexpable.fun
+	lib/equable.fun
+	lib/comparable.fun
 	lib/monad.fun
 
 	lib/exn.sig
@@ -53,6 +65,10 @@ is
 	lib/option.sml
 	lib/list.sig
 	lib/list.sml
+	lib/bool.sig
+	lib/bool.sml
+	lib/unit.sig
+	lib/unit.sml
 	lib/int.sig
 	lib/int.sml
 

@@ -34,6 +34,7 @@ endif
 _build/smlnj/$(TEST).$(SUFFIX): _build/smlnj/$(TEST).cm.mk
 	mkdir -p $(@D)
 	ml-build $(TEST).cm $(MAIN) _build/smlnj/$(TEST)
+	touch $@
 
 _build/smlnj/$(TEST)-wrapper.sh:
 	mkdir -p $(@D)

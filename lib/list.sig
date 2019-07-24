@@ -141,22 +141,22 @@ sig
 	val partitionResult : ('ok, 'error) BaseResult.t t -> ('ok t * 'error t)
 	(** [partitionResult l] returns a pair of lists [(l1, l2)] where [l1] is the list of all [OK] and [l2] is the list of all [ERROR]. *)
 
-	val merge : ('a * 'a -> int) -> 'a t -> 'a t -> 'a t
+	val merge : ('a * 'a -> order) -> 'a t -> 'a t -> 'a t
 	(** Merges two sorted lists. *)
 
-	val sort : ('a * 'a -> int) -> 'a t -> 'a t
+	val sort : ('a * 'a -> order) -> 'a t -> 'a t
 	(** [sort] is currently [stableSort]. TODO: implement an efficient sort, e.g., std::sort in C++. *)
 
-	val stableSort : ('a * 'a -> int) -> 'a t -> 'a t
+	val stableSort : ('a * 'a -> order) -> 'a t -> 'a t
 	(** [stableSort] is a wrapper of [ListMergeSort.sort] in SML/NJ libraries. *)
 
-	val dedupAndSort : ('a * 'a -> int) -> 'a t -> 'a t
+	val dedupAndSort : ('a * 'a -> order) -> 'a t -> 'a t
 	(** Returns the given list with duplicates removed and in sorted order. *)
 
-	val isSorted : ('a * 'a -> int) -> 'a t -> bool
+	val isSorted : ('a * 'a -> order) -> 'a t -> bool
 	(** [isSorted cmp t] returns [true] iff all adjacent [a1, a2] in [t], [cmp (a1, a2) <= 0]. *)
 
-	val isSortedStrictly : ('a * 'a -> int) -> 'a t -> bool
+	val isSortedStrictly : ('a * 'a -> order) -> 'a t -> bool
 	(** [isSortedStrictly] is similar to [isSorted], but requires [<] instead of [<=]. *)
 
 

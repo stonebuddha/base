@@ -19,8 +19,11 @@ in
 			lib/cont-mlton.sml
 			lib/utils.sml
 
-			lib/equable.fun
+			lib/stringable.fun
+			lib/intable.fun
 			lib/sexpable.fun
+			lib/equable.fun
+			lib/comparable.fun
 			lib/monad.fun
 
 			lib/exn.sig
@@ -37,6 +40,10 @@ in
 			lib/option.sml
 			lib/list.sig
 			lib/list.sml
+			lib/bool.sig
+			lib/bool.sml
+			lib/unit.sig
+			lib/unit.sml
 			lib/int.sig
 			lib/int.sml
 
@@ -48,6 +55,12 @@ in
 		in
 			signature BAVL = BASE_AVL
 			structure BAvl = BaseAvl
+
+			signature BBOOL = BASE_BOOL
+			structure BBool = BaseBool
+
+			signature BCOMPARABLE = BASE_COMPARABLE
+			functor BComparable_Make = BaseComparable_Make
 
 			signature BCONTAINER = BASE_CONTAINER
 			structure BContainer = BaseContainer
@@ -74,6 +87,9 @@ in
 
 			signature BSEXP_LIB = BASE_SEXP_LIB
 			structure BSExpLib = BaseSExpLib
+
+			signature BUNIT = BASE_UNIT
+			structure BUnit = BaseUnit
 		end
 	end
 end

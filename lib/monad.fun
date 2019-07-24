@@ -33,10 +33,12 @@ end
 
 signature BASE_MONAD_S2 =
 sig
-	include BASE_MONAD_BASIC2
+	type ('a, 'e) monad
 
 	val >>= : (('a, 'e) monad * ('a -> ('b, 'e) monad)) -> ('b, 'e) monad
 	val >>| : (('a, 'e) monad * ('a -> 'b)) -> ('b, 'e) monad
+	val bind : ('a -> ('b, 'e) monad) -> ('a, 'e) monad -> ('b, 'e) monad
+	val return : 'a -> ('a, 'e) monad
 	val map : ('a -> 'b) -> ('a, 'e) monad -> ('b, 'e) monad
 	val join : (('a, 'e) monad, 'e) monad -> ('a, 'e) monad
 	val ignoreM : ('a, 'e) monad -> (unit, 'e) monad
