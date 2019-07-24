@@ -23,6 +23,7 @@ signature BINT_UNBOUNDED = BASE_INT_S_COMMON
 structure BInt = BaseInt
 structure BInt32 = BaseInt32
 structure BInt64 = BaseInt64
+structure BLargeInt = BaseLargeInt
 
 signature BLIST = BASE_LIST
 structure BList = BaseList

@@ -24,6 +24,7 @@ Library
 	structure BInt
 	structure BInt32
 	structure BInt64
+	structure BLargeInt
 
 	signature BLIST
 	structure BList

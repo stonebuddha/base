@@ -181,21 +181,21 @@ struct
 	fun incr r = r := succ (!r)
 
 	fun pow (base, exponent) =
-			if exponent < zero then raise (InvalidArg "BaseInt32.pow: exponent cannot be negative")
+			if exponent < 0 then raise (InvalidArg "BaseInt32.pow: exponent cannot be negative")
 			else
-				if abs base > one andalso exponent > fromInt numBits - one then raise (InvalidArg "BaseInt32.pow: integer overflow")
+				if abs base > 1 andalso exponent > numBits - 1 then raise (InvalidArg "BaseInt32.pow: integer overflow")
 				else
 					let
 						val acc = ref one
-						val exp = ref (Word32.fromLargeInt $ toLargeInt exponent)
+						val exp = ref (Word.fromInt exponent)
 						val cur = ref base
 					in
 						while !exp > 0w0 do
 							let
-								val b = Word32.andb (!exp, 0w1) = 0w1
+								val b = Word.andb (!exp, 0w1) = 0w1
 							in
 								if b then acc := !acc * !cur else ();
-								exp := Word32.>> (!exp, 0w1);
+								exp := Word.>> (!exp, 0w1);
 								cur := !cur * !cur
 							end
 						handle Overflow => raise (InvalidArg "BaseInt32.pow: integer overflow");
@@ -294,21 +294,21 @@ struct
 	fun incr r = r := succ (!r)
 
 	fun pow (base, exponent) =
-			if exponent < zero then raise (InvalidArg "BaseInt32.pow: exponent cannot be negative")
+			if exponent < 0 then raise (InvalidArg "BaseInt32.pow: exponent cannot be negative")
 			else
-				if abs base > one andalso exponent > fromInt numBits - one then raise (InvalidArg "BaseInt32.pow: integer overflow")
+				if abs base > 1 andalso exponent > numBits - 1 then raise (InvalidArg "BaseInt32.pow: integer overflow")
 				else
 					let
 						val acc = ref one
-						val exp = ref (Word64.fromLargeInt $ toLargeInt exponent)
+						val exp = ref (Word.fromInt exponent)
 						val cur = ref base
 					in
 						while !exp > 0w0 do
 							let
-								val b = Word64.andb (!exp, 0w1) = 0w1
+								val b = Word.andb (!exp, 0w1) = 0w1
 							in
 								if b then acc := !acc * !cur else ();
-								exp := Word64.>> (!exp, 0w1);
+								exp := Word.>> (!exp, 0w1);
 								cur := !cur * !cur
 							end
 						handle Overflow => raise (InvalidArg "BaseInt32.pow: integer overflow");
@@ -340,6 +340,89 @@ struct
 	open Comparable
 end
 
-(* structure BaseLargeInt : BASE_LARGE_INT =
+structure BaseLargeInt : BASE_INT_S_COMMON where type t = LargeInt.int =
 struct
-end *)
+	open Utils BaseExn
+	infixr 0 $
+
+	type t = LargeInt.int
+
+	type sexpable = t
+
+	fun fromSExp (SExp.INT i) = i
+		| fromSExp _ = raise (InvalidArg "BaseLargeInt.fromSExp")
+
+	fun toSExp i = SExp.INT i
+
+	type intable = t
+
+	fun toInt i = LargeInt.toInt i handle Overflow => raise (InvalidArg $ "BaseLargeInt.toInt " ^ LargeInt.toString i ^ " is out of range")
+	fun fromInt i = LargeInt.fromInt i
+
+	type stringable = t
+
+	fun toString i = LargeInt.toString i
+
+	fun fromString s =
+			case LargeInt.fromString s of
+				SOME i => i
+			| NONE => raise (InvalidArg $ "BaseLargeInt.fromString: " ^ s)
+
+	val zero = fromInt 0
+	val one = fromInt 1
+	val minusOne = fromInt ~1
+
+	type floatable = t
+
+	val toReal = Real.fromLargeInt
+
+	fun fromReal r = Real.toLargeInt IEEEReal.TO_ZERO r handle (Domain | Overflow) => raise (InvalidArg $ "BaseLargeInt.fromReal " ^ Real.toString r ^ " is out of range or NaN")
+
+	fun op// (a, b) = toReal a / toReal b
+
+	fun fromInt32 n = Int32.toLarge n
+	fun toInt32 n = Int32.fromLarge n handle Overflow => raise (InvalidArg $ "BaseLargeInt.toInt32 " ^ toString n ^ " is out of range")
+
+	fun fromInt64 n = Int64.toLarge n
+	fun toInt64 n = Int64.fromLarge n handle Overflow => raise (InvalidArg $ "BaseLargeInt.toInt64 " ^ toString n ^ " is out of range")
+
+	fun fromLargeInt n = n
+
+	fun toLargeInt n = n
+
+	val abs = LargeInt.abs
+
+	fun succ n = n + one
+
+	fun pred n = n - one
+
+	fun decr r = r := pred (!r)
+
+	fun incr r = r := succ (!r)
+
+	val pow = IntInf.pow
+
+	val op** = pow
+
+	val op+ = op LargeInt.+
+	val op- = op LargeInt.-
+	val op* = op LargeInt.*
+
+	val op~ = op LargeInt.~
+	val neg = op LargeInt.~
+
+	val op/% = LargeInt.quot
+	val op% = LargeInt.rem
+	val op div = op LargeInt.div
+	val op mod = op LargeInt.mod
+
+	structure Comparable = BaseComparable_Make(
+		struct
+			type comparable = t
+
+			val compare = LargeInt.compare
+
+			val toSExp = toSExp
+		end)
+	open Comparable
+end

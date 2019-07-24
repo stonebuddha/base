@@ -37,8 +37,8 @@ sig
 	val - : t * t -> t
 	val * : t * t -> t
 
-	val pow : t * t -> t
-	val ** : t * t -> t
+	val pow : t * int -> t
+	val ** : t * int -> t
 	(** Integer exponentiation. *)
 
 	val neg : t -> t
