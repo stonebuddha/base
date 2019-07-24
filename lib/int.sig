@@ -21,6 +21,28 @@ sig
 	(** {2 Comparable API} *)
 
 	include BASE_COMPARABLE where type comparable = t
+
+
+	(** {2 Infix Operators & Constants} *)
+
+	val zero : t
+	val one : t
+	val + : t * t -> t
+	val - : t * t -> t
+	val * : t * t -> t
+
+	(* val ** : t * t -> t *)
+	(** Integer exponentiation. *)
+
+	val neg : t -> t
+	val ~ : t -> t
+
+	val /% : t * t -> t
+	val % : t * t -> t
+	val div : t * t -> t
+	val mod : t * t -> t
+
+	val // : t * t -> real
 end
 
 signature BASE_INT_S =

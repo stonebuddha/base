@@ -35,4 +35,21 @@ struct
 			val toSExp = toSExp
 		end)
 	open Comparable
+
+	val zero = 0
+	val one = 1
+
+	val op+ = op+
+	val op- = op-
+	val op* = op*
+
+	val op~ = op~
+	fun neg x = ~ x
+
+	val op/% = Int.quot
+	val op% = Int.rem
+	val op div = op Int.div
+	val op mod = op Int.mod
+
+	fun op// (a, b) = Real.fromInt a / Real.fromInt b
 end
