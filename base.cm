@@ -20,10 +20,18 @@ Library
 	structure BExn
 
 	signature BINT
+	signature BINT_UNBOUNDED
 	structure BInt
+	structure BInt32
+	structure BInt64
 
 	signature BLIST
 	structure BList
+
+	signature BMONAD_S1
+	signature BMONAD_S2
+	functor BMonad_Make1
+	functor BMonad_Make2
 
 	signature BOPTION
 	structure BOption

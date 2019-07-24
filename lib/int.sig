@@ -37,8 +37,8 @@ sig
 	val - : t * t -> t
 	val * : t * t -> t
 
-	(* val pow : t * t -> t
-	val ** : t * t -> t *)
+	val pow : t * t -> t
+	val ** : t * t -> t
 	(** Integer exponentiation. *)
 
 	val neg : t -> t
@@ -51,47 +51,26 @@ sig
 
 	val // : t * t -> real
 
-	(* val land : t * t -> t
-	val lor : t * t -> t
-	val lxor : t * t -> t
-	val lsl : t * int -> t
-	val asr : t * int -> t *)
-
 
 	(** {2 Other Common Functions} *)
 
-	(* val abs : t -> t
+	val abs : t -> t
 
 	val succ : t -> t
 	val pred : t -> t
 
 	val decr : t ref -> unit
-	val incr : t ref -> unit *)
-
-
-	(** {2 Bitwise Logical Operations} *)
-
-	(* val bitAnd : t * t -> t
-	val bitOr : t * t -> t
-	val bitXor : t * t -> t
-	val bitNot : t -> t
-	val popcount : t -> int *)
-
-
-	(** {2 Bit-Shifting Operations} *)
-
-	(* val shiftLeft : t * int -> t
-	val shiftRight : t * int -> t *)
+	val incr : t ref -> unit
 
 
 	(** {2 Conversion Functions} *)
 
-	(* val fromInt32 : Int32.int -> t
+	val fromInt32 : Int32.int -> t
 	val toInt32 : t -> Int32.int
 	val fromInt64 : Int64.int -> t
 	val toInt64 : t -> Int64.int
 	val fromLargeInt : LargeInt.int -> t
-	val toLargeInt : t -> LargeInt.int *)
+	val toLargeInt : t -> LargeInt.int
 end
 
 signature BASE_INT_S =
@@ -100,14 +79,6 @@ sig
 
 	val numBits : int
 
-	(* val maxValue : t
+	val maxValue : t
 	val minValue : t
-
-	val lsr : t * int -> t
-	val shiftRightLogical : t * int -> t *)
-end
-
-signature BASE_INT =
-sig
-	include BASE_INT_S where type t = int
 end
