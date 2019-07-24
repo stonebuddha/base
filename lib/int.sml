@@ -39,12 +39,12 @@ struct
 	val zero = 0
 	val one = 1
 
-	val op+ = op+
-	val op- = op-
-	val op* = op*
+	val op+ = op Int.+
+	val op- = op Int.-
+	val op* = op Int.*
 
-	val op~ = op~
-	fun neg x = ~ x
+	val op~ = op Int.~
+	val neg = op Int.~
 
 	val op/% = Int.quot
 	val op% = Int.rem
@@ -52,4 +52,6 @@ struct
 	val op mod = op Int.mod
 
 	fun op// (a, b) = Real.fromInt a / Real.fromInt b
+
+	val numBits = Option.valOf Int.precision
 end
