@@ -8,5 +8,5 @@ struct
 
 	fun toSExp (InvalidArg msg) = SExp.LIST [SExp.SYMBOL $ Atom.atom "InvalidArg", SExp.STRING msg]
 		| toSExp (NotFound msg) = SExp.LIST [SExp.SYMBOL $ Atom.atom "NotFound", SExp.STRING msg]
-		| toSExp _ = raise (InvalidArg "BaseExn.toSExp")
+		| toSExp exn = SExp.LIST [SExp.SYMBOL $ Atom.atom (exnName exn), SExp.STRING $ exnMessage exn]
 end

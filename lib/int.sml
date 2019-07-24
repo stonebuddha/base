@@ -38,6 +38,7 @@ struct
 
 	val zero = 0
 	val one = 1
+	val minusOne = ~1
 
 	val op+ = op Int.+
 	val op- = op Int.-
@@ -54,4 +55,10 @@ struct
 	fun op// (a, b) = Real.fromInt a / Real.fromInt b
 
 	val numBits = Option.valOf Int.precision
+
+	type floatable = t
+
+	val toReal = Real.fromInt
+
+	val fromReal = Real.toInt IEEEReal.TO_NEAREST (* TODO: handle exceptions *)
 end

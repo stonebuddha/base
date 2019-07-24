@@ -46,6 +46,7 @@ is
 
 	lib/stringable.fun
 	lib/intable.fun
+	lib/floatable.fun
 	lib/sexpable.fun
 	lib/equable.fun
 	lib/comparable.fun
