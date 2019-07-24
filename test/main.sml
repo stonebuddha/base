@@ -13,7 +13,7 @@ struct
 			assertEqual (BOption.equal BInt.equal) (SOME (BSExpLib.toString o BOption.toSExp BInt.toSExp)) (expected, actual)
 
 	fun assertEqualForBool (expected, actual) =
-			assertEqual BBool.equal (SOME (BSExpLib.toString o BBool.toSExp)) (expected, actual)
+			assertEqual BBool.equal (SOME BBool.toString) (expected, actual)
 
 	structure ListTest =
 	struct
