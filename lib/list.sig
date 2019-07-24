@@ -203,4 +203,26 @@ sig
 
 	val zip : 'a t -> 'b t -> ('a * 'b) t OrUnequalLengths.t
 	val zipExn : 'a t -> 'b t -> ('a * 'b) t
+
+	structure Assoc :
+	sig
+		type ('a, 'b) t = ('a * 'b) list
+
+		include BASE_SEXPABLE_S2 where type ('a, 'b) sexpable = ('a, 'b) t
+
+		val add : ('a * 'a -> bool) -> ('a, 'b) t -> 'a -> 'b -> ('a, 'b) t
+
+		val find : ('a * 'a -> bool) -> ('a, 'b) t -> 'a -> 'b option
+
+		val findExn : ('a * 'a -> bool) -> ('a, 'b) t -> 'a -> 'b
+
+		val mem : ('a * 'a -> bool) -> ('a, 'b) t -> 'a -> bool
+
+		val remove : ('a * 'a -> bool) -> ('a, 'b) t -> 'a -> ('a, 'b) t
+
+		val map : ('b -> 'c) -> ('a, 'b) t -> ('a, 'c) t
+
+		val inverse : ('a, 'b) t -> ('b, 'a) t
+		(** Bijectivity is not guaranteed. *)
+	end
 end

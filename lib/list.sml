@@ -530,4 +530,35 @@ struct
 			case dropLast l of
 				SOME l => l
 			| NONE => raise (InvalidArg "BaseList.dropLastExn: empty list")
+
+	structure Assoc =
+	struct
+		type ('a, 'b) t = ('a * 'b) list
+
+		type ('a, 'b) sexpable = ('a, 'b) t
+
+		val toSExp = fn forA => fn forB => fn t => toSExp (fn (a, b) => SExp.LIST [forA a, forB b]) t
+
+		val fromSExp = fn forA => fn forB => fn sexp => fromSExp (fn (SExp.LIST [a, b]) => (forA a, forB b) | _ => raise (InvalidArg "BaseList.Assoc.fromSExp")) sexp
+
+		val find = fn equal => fn t => fn key =>
+						case find (fn (key', _) => equal (key, key')) t of
+							NONE => NONE
+						| SOME x => SOME (#2 x)
+
+		fun findExn equal t key =
+				case find equal t key of
+					SOME v => v
+				| NONE => raise (NotFound "BaseList.Assoc.findExn: not found")
+
+		fun mem equal t key = Option.isSome $ find equal t key
+
+		fun remove equal t key = filter (fn (key', _) => not (equal (key, key'))) t
+
+		fun add equal t key value = (key, value) :: remove equal t key
+
+		fun inverse t = map (fn (x, y) => (y, x)) t
+
+		val map = fn f => fn t => map (fn (key, value) => (key, f value)) t
+	end
 end
