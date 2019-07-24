@@ -7,13 +7,13 @@ struct
 			assertEqual BSExpLib.equal (SOME BSExpLib.toString) (expected, actual)
 
 	fun assertEqualForIntList (expected, actual) =
-			assertEqual (BList.equal op=) (SOME (BSExpLib.toString o BList.toSExp BInt.toSExp)) (expected, actual)
+			assertEqual (BList.equal BInt.equal) (SOME (BSExpLib.toString o BList.toSExp BInt.toSExp)) (expected, actual)
 
 	fun assertEqualForIntOption (expected, actual) =
-			assertEqual (BOption.equal op=) (SOME (BSExpLib.toString o BOption.toSExp BInt.toSExp)) (expected, actual)
+			assertEqual (BOption.equal BInt.equal) (SOME (BSExpLib.toString o BOption.toSExp BInt.toSExp)) (expected, actual)
 
 	fun assertEqualForBool (expected, actual) =
-			assertEqual op= (SOME (fn true => "true" | false => "false")) (expected, actual)
+			assertEqual BBool.equal (SOME (BSExpLib.toString o BBool.toSExp)) (expected, actual)
 
 	structure ListTest =
 	struct

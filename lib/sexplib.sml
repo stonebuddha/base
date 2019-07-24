@@ -10,12 +10,7 @@ struct
 				| (SExp.LIST a, SExp.LIST b) => BaseList.compare compare (a, b)
 				| (SExp.LIST _, _) => LESS
 				| (_, SExp.LIST _) => GREATER
-				| (SExp.BOOL a, SExp.BOOL b) => (* BaseBool.compare (a, b) *)
-					(case (a, b) of
-							(false, false) => EQUAL
-						| (false, true) => LESS
-						| (true, false) => GREATER
-						| (true, true) => EQUAL)
+				| (SExp.BOOL a, SExp.BOOL b) => BaseBool.compare (a, b)
 				| (SExp.BOOL _, _) => LESS
 				| (_, SExp.BOOL _) => GREATER
 				| (SExp.INT a, SExp.INT b) => IntInf.compare (a, b)
