@@ -1,4 +1,4 @@
-signature BASE_AVL =
+signature BASE_AVL_TREE =
 sig
 	type ('k, 'v) t
 

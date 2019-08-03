@@ -1,4 +1,4 @@
-structure BaseAvl : BASE_AVL =
+structure BaseAvlTree : BASE_AVL_TREE =
 struct
 	open Utils
 	infixr 0 $
@@ -20,9 +20,9 @@ struct
 	fun invariant cmp =
 			let
 				fun legalLeftKey _ EMPTY = ()
-					| legalLeftKey key (LEAF {key = leftKey, ...} | NODE {key=leftKey, ...}) = assert (cmp (leftKey, key) = LESS)
+					| legalLeftKey key (LEAF {key = leftKey, ...} | NODE {key = leftKey, ...}) = assert (cmp (leftKey, key) = LESS)
 				fun legalRightKey _ EMPTY = ()
-					| legalRightKey key (LEAF {key = rightKey, ...} | NODE {key=rightKey, ...}) = assert (cmp (rightKey, key) = GREATER)
+					| legalRightKey key (LEAF {key = rightKey, ...} | NODE {key = rightKey, ...}) = assert (cmp (rightKey, key) = GREATER)
 				fun inv (EMPTY | LEAF _) = ()
 					| inv (NODE {left, key = k, height = h, right, ...}) =
 						let

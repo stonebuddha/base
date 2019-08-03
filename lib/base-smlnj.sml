@@ -1,5 +1,5 @@
-signature BAVL = BASE_AVL
-structure BAvl = BaseAvl
+signature BAVL_TREE = BASE_AVL_TREE
+structure BAvlTree = BaseAvlTree
 
 signature BBOOL = BASE_BOOL
 structure BBool = BaseBool

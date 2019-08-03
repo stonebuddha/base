@@ -1,6 +1,6 @@
 Library
-	signature BAVL
-	structure BAvl
+	signature BAVL_TREE
+	structure BAvlTree
 
 	signature BBOOL
 	structure BBool
@@ -85,7 +85,7 @@ is
 	lib/sexplib.sig
 	lib/sexplib.sml
 
-	lib/avl.sig
-	lib/avl.sml
+	lib/avl-tree.sig
+	lib/avl-tree.sml
 
 	lib/base-smlnj.sml
